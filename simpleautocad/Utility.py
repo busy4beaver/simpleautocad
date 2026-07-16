@@ -118,14 +118,15 @@ class BlockReference(ABC):
     @abstractmethod
     def BlockName(self) -> str: ...
 
-    def insert(self, insertion_point:PyGePoint3d, space: AcadModelSpace | AcadPaperSpace | AcadBlock):
+    def insert(self, insertion_point:PyGePoint3d, space: AcadModelSpace | AcadPaperSpace | AcadBlock) -> AcadBlockReference:
         block = space.InsertBlock(insertion_point, self.BlockName)
         if self.acad_block_reference:
-            return type(self)(block)
+            return block
 
         self.Attributes = self._get_block_attributes(block)
         self.DynamicProperties = self._get_block_dynamic_properties(block)
         self.acad_block_reference = block
+        return block
 
     
     def attribute(self, tag_name: str) -> AcadAttributeReference:
