@@ -24,7 +24,7 @@ jobs:
       - name: Установить Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: '3.x'
 
       - name: Установить зависимости для сборки
         run: |
