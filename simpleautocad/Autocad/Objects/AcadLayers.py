@@ -2,6 +2,7 @@ from __future__ import annotations
 from ..Base import *
 from ..Proxy import *
 from ..AcadObject import *
+from .AcadLayer import AcadLayer
 
 
 
