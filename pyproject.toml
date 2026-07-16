@@ -1,39 +1,52 @@
-# pyproject.toml
-
 [build-system]
-# Указывает pip, какой инструмент использовать для сборки пакета (в данном случае - setuptools)
-requires = ["setuptools>=61.0"] 
-build-backend = "setuptools.build_meta" #
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
 
 [project]
-# Основные метаданные вашего проекта
-name = "simpleautocad" # Имя пакета, под которым он будет в PyPI
-version = "0.0.1b5"
+name = "simpleautocad"
+version = "1.0.0"
 description = "Модуль для работы с AutoCAD через COM интерфейс"
-requires-python = ">=3.13" # Минимальная требуемая версия Python
+readme = "README.md"
 authors = [
     { name = "Andrey Litvinov", email = "busybeaver.bb@gmail.com" }
 ]
-readme = "README.md"
-# Зависимости проекта (то, что нужно для работы вашего кода)
+license = { file = "LICENSE" }
+requires-python = ">=3.8"
 dependencies = [
     "pywin32",
     "numpy",
 ]
-
-# Классификаторы PyPI (помогают людям найти ваш пакет)
 classifiers = [
-    "Programming Language :: Python :: 3",
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Operating System :: Microsoft :: Windows",
+    "Topic :: Software Development :: Libraries :: Python Modules",
 ]
+
+[project.scripts]
+autocad-check = "simpleautocad.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/BusyBeaver54"
+Repository = "https://github.com/BusyBeaver54/simpleautocad"
+Documentation = "https://github.com/BusyBeaver54/simpleautocad#readme"
+"Donate" = "https://boosty.to/busybeaver/donate"
+
+[tool.setuptools.packages.find]
+include = ["simpleautocad*"]
+
+[tool.setuptools.package-data]
+simpleautocad = ["py.typed"]
 
 [tool.pytest.ini_options]
 minversion = "8.0"
 addopts = "-v"
-testpaths = [
-    "tests", 
-]
-
-# py -m build --wheel -C--global-option=--plat-name=win_amd64
-# twine upload dist/*
+testpaths = ["tests"]
