@@ -1,6 +1,5 @@
 # simpleautocad/cli.py
 import sys
-from .Utility import AutoCAD
 
 def main():
     """Консольная утилита для проверки подключения к AutoCAD."""
