@@ -10,6 +10,8 @@ readme = "README.md"
 authors = [
     { name = "Andrey Litvinov", email = "busybeaver.bb@gmail.com" }
 ]
+keywords = ["autocad","com"]
+
 license = { file = "LICENSE" }
 requires-python = ">=3.8"
 dependencies = [
@@ -35,9 +37,9 @@ classifiers = [
 autocad-check = "simpleautocad.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/BusyBeaver54"
-Repository = "https://github.com/BusyBeaver54/simpleautocad"
-Documentation = "https://github.com/BusyBeaver54/simpleautocad#readme"
+Homepage = "https://github.com/busy4beaver"
+Repository = "https://github.com/busy4beaver/simpleautocad"
+Documentation = "https://github.com/busy4beaver/simpleautocad#readme"
 "Donate" = "https://boosty.to/busybeaver/donate"
 
 [tool.setuptools.packages.find]
