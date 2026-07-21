@@ -16,7 +16,7 @@ def main():
 
     if args.check:
         try:
-            from .Utility import AutoCAD
+            from .autocad import AutoCAD
             app = AutoCAD()
             print(f"Подключено к AutoCAD версии: {app.Version}")
             print("Активный документ:", app.ActiveDocument.Name)

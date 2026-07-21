@@ -62,7 +62,7 @@ class AppObject:
         return self._obj
 
 class Application(ABC):
-    def __new__(cls, dispatch_object=None):
+    def __new__(cls, dispatch_object: CDispatch = None):
         instance = super().__new__(cls)
         instance._dispatch_obj_to_init = None 
         instance._is_owner = False
@@ -78,12 +78,12 @@ class Application(ABC):
                 Exception(f"Ошибка запуска приложения: {e}")
         return instance
     
-    def __init__(self, dispatch_object=None):
+    def __init__(self, dispatch_object = None):
         super().__init__(self._dispatch_obj_to_init)
         del self._dispatch_obj_to_init # Очищаем временное хранилище
 
     @abstractmethod
-    def _manage_application_instance(self): pass
+    def _manage_application_instance(self): ...
     
 
 

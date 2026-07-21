@@ -51,8 +51,8 @@ class AutoCAD(AcadApplication):
         # 'AcDbBlockReference':(AcadExternalReference, AcadBlockReference), ##
     }
 
-    def __init__(self):
-        super().__init__(dispatch_object = None)
+    def __init__(self, dispatch_object: CDispatch = None):
+        super().__init__(dispatch_object)
 
     def uGetAcadAcCmColor(self) -> AcadAcCmColor:
         progID = AcadApplication.__app_full_name__.replace('Application','AcCmColor')
@@ -78,7 +78,14 @@ class AutoCAD(AcadApplication):
 
     def uGetObjectType(self, obj: AcadObject) -> type:
         return self._ACAD_TYPE_MAP.get(obj.ObjectName,None)
-
+    
+    @classmethod
+    def CreateNewInstance(cls) -> 'AutoCAD':
+        clsid = get_clsid(AcadApplication)
+        try:
+            return AutoCAD(create_new_instance_explicitly(clsid[1]))
+        except Exception as e:
+            Exception(f"Ошибка запуска приложения: {e}")
 
 
 class BlockReference(ABC):

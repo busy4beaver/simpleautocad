@@ -5,7 +5,7 @@ from .Autocad.Base import *
 from .Autocad.AcadEntity import *
 from .Autocad.AcadObject import *
 from .Types import *
-from .Utility import *
+from .autocad import *
 
 from .__version__ import __version__, __author__, __email__, __license__
 
