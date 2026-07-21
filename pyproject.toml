@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "simpleautocad"
-version = "1.0.1"
+dynamic = ["version"]
 description = "Модуль для работы с AutoCAD через COM интерфейс"
 readme = "README.md"
 authors = [
@@ -51,7 +51,5 @@ include = ["simpleautocad*"]
 [tool.setuptools.package-data]
 simpleautocad = ["py.typed"]
 
-[tool.pytest.ini_options]
-minversion = "8.0"
-addopts = "-v"
-testpaths = ["tests"]
+[tool.setuptools.dynamic]
+version = {attr = "simpleautocad.__version__"}
