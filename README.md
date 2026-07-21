@@ -43,7 +43,7 @@
 pip install simpleautocad
 ```
 ```bash
-pip install git+https://github.com/BusyBeaver54/simpleautocad.git
+pip install git+https://github.com/busy4beaver/simpleautocad.git
 ```
 
 Системные требования:
