@@ -33,8 +33,7 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Operating System :: Microsoft :: Windows",
-    "Topic :: Multimedia :: Graphics :: 3D Modeling",
-    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Multimedia :: Graphics :: 3D Modeling"
 ]
 
 [project.scripts]
