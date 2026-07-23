@@ -43,7 +43,8 @@ autocad-check = "simpleautocad.cli:main"
 Homepage = "https://github.com/busy4beaver"
 Repository = "https://github.com/busy4beaver/simpleautocad"
 Documentation = "https://github.com/busy4beaver/simpleautocad#readme"
-"Donate" = "https://boosty.to/busybeaver/donate"
+Funding = "https://yoomoney.ru/to/4100118099549894"
+Donation = "https://boosty.to/busybeaver/donate"
 
 [tool.setuptools.packages.find]
 include = ["simpleautocad*"]
