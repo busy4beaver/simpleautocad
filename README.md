@@ -5,6 +5,8 @@
 
 [![Tag](https://img.shields.io/github/v/tag/busy4beaver/simpleautocad?color=00c2e8)](#)
 [![Downloads](https://img.shields.io/github/downloads/busy4beaver/simpleautocad/total?color=c87bff)](#)
+[![YooMoney](https://img.shields.io/badge/Donation-Yoo.money-blue.svg)](https://yoomoney.ru/to/4100118099549894) 
+[![Boosty](https://img.shields.io/badge/Boosty-donate-orange.svg)](https://boosty.to/busybeaver/donate)
 
 ---
 
@@ -25,8 +27,6 @@
       - [Запись и чтение XData](#запись-и-чтение-xdata)
       - [Работа с блоками и атрибутами](#работа-с-блоками-и-атрибутами)
       - [Геометрические преобразования](#геометрические-преобразования)
-  - [Автор](#автор)
-  - [☕ Поддержать проект](#-поддержать-проект)
 
 ---
 
@@ -419,13 +419,3 @@ matrix_scale = PyGeMatrix3d.scaling(2.0, center)
 line.TransformBy(matrix_scale)
 ```
 
-## <a name="author"></a>Автор
-
- - [Андрей Литвинов](https://t.me/busy4beaver)
-  
-## ☕ Поддержать проект
-
-Если этот проект оказался вам полезен, вы можете поддержать его развитие:
-
-[![YooMoney](https://img.shields.io/badge/Donation-Yoo.money-blue.svg)](https://yoomoney.ru/to/4100118099549894) 
-[![Boosty](https://img.shields.io/badge/Boosty-donate-orange.svg)](https://boosty.to/busybeaver/donate)
