@@ -422,6 +422,8 @@ line.TransformBy(matrix_scale)
   
 ## ☕ Поддержать проект
 
-Если этот проект оказался вам полезен, вы можете поддержать его развитие через **Boosty**:
+Если этот проект оказался вам полезен, вы можете поддержать его развитие:
 
-[![Boosty](https://shields.io)](https://boosty.to/busybeaver/donate)
+
+[![Boosty](https://shields.io)](https://boosty.to/busybeaver/donate)  
+[![ЮMoney](https://shields.io)](https://yoomoney.ru/to/4100118099549894)
