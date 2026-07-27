@@ -62,14 +62,12 @@ def _is_com_dispatch(obj) -> bool:
     """CDispatch и похожие COM-обёртки win32com (у них часто callable == True)."""
     if isinstance(obj, CDispatch):
         return True
-    # dynamic.CDispatch / другие обёртки
     try:
         from win32com.client import DispatchBaseClass
         if isinstance(obj, DispatchBaseClass):
             return True
     except Exception:
         pass
-    # У сырого IDispatch часто есть _oleobj_
     if hasattr(obj, '_oleobj_') and not isinstance(obj, type):
         return True
     return False
@@ -99,6 +97,54 @@ def _unwrap_com(obj):
     return obj
 
 
+def _prepare_com_arg(value):
+    """
+    Готовит аргумент к передаче в COM.
+
+    AppObject / _RetryComProxy → сырой dispatch
+    Variant / vObjectArray / … → VARIANT (с развёрткой вложенных объектов)
+    PyGe* → результат __call__() (tuple / array для COM)
+    list/tuple → рекурсивно
+    """
+    if value is None or isinstance(value, (bool, int, float, str, bytes)):
+        return value
+
+    if isinstance(value, _RetryComProxy):
+        return object.__getattribute__(value, '_com')
+
+    if isinstance(value, AppObject):
+        return object.__getattribute__(value, '_raw_obj')
+
+    # Variant и наследники (vObjectArray, vDoubleArray, …)
+    if hasattr(value, 'to_variant') and hasattr(value, '_value_py'):
+        py = value._value_py
+        if isinstance(py, list):
+            value._value_py = [_prepare_com_arg(x) for x in py]
+        elif py is not None and not isinstance(py, (bool, int, float, str, bytes)):
+            value._value_py = _prepare_com_arg(py)
+        return value()
+
+    if isinstance(value, (list, tuple)):
+        return type(value)(_prepare_com_arg(v) for v in value)
+
+    # PyGePoint3d / Matrix / Vector — библиотека отдаёт COM-значение через ()
+    if callable(value) and not _is_com_dispatch(value) and not isinstance(value, type):
+        if any(getattr(c, '__name__', '').startswith('PyGe') for c in type(value).__mro__):
+            try:
+                return value()
+            except Exception:
+                pass
+
+    return value
+
+
+def _prepare_com_args(args, kwargs):
+    return (
+        tuple(_prepare_com_arg(a) for a in args),
+        {k: _prepare_com_arg(v) for k, v in kwargs.items()},
+    )
+
+
 class _RetryComProxy:
     """
     Прозрачная обёртка над COM-объектом.
@@ -113,6 +159,7 @@ class _RetryComProxy:
 
     Важно: CDispatch в win32com часто callable, поэтому нельзя
     решать «метод это или свойство» только через callable().
+    Перед вызовом метода аргументы проходят _prepare_com_arg.
     """
 
     __slots__ = ('_com', '_owner')
@@ -158,12 +205,14 @@ class _RetryComProxy:
         if not callable(attr):
             return attr
 
-        # Настоящий метод COM — при вызове ретраим и заново берём с актуального _com
+        # Настоящий метод COM — unwrap args, retry, свежий _com
         def _wrapped(*args, **kwargs):
+            cargs, ckwargs = _prepare_com_args(args, kwargs)
+
             def _invoke():
                 com = object.__getattribute__(self, '_com')
                 method = getattr(com, name)
-                return method(*args, **kwargs)
+                return method(*cargs, **ckwargs)
 
             result = execute_com_call(
                 _invoke,
@@ -180,9 +229,11 @@ class _RetryComProxy:
             object.__setattr__(self, name, value)
             return
 
+        prepared = _prepare_com_arg(value)
+
         def _set():
             com = object.__getattribute__(self, '_com')
-            setattr(com, name, value)
+            setattr(com, name, prepared)
 
         execute_com_call(
             _set,
