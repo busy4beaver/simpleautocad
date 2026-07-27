@@ -1,19 +1,27 @@
 from __future__ import annotations
 from enum import IntEnum
 
+from ..Utils.retry_com import execute_com_call
+
+
 class AccessMode(IntEnum):
     ReadWrite = 0
     ReadOnly = 1
     WriteOnly = 2
     DenyFromAll = 3
 
-class proxy_property(): #Generic[T]
+
+class proxy_property():  # Generic[T]
     def __init__(self, rettype: type, propertyName: str, mode: AccessMode):
         # Храним как строку ИЛИ как класс
         self.rettype_name = rettype if isinstance(rettype, str) else None
         self.rettype = rettype
         self.propertyName = propertyName
         self.mode = mode
+
+    def _reconnect_of(self, instance):
+        fn = getattr(instance, '_reconnect_com', None)
+        return fn if callable(fn) else None
 
     def __get__(self, instance, owner):
         if self.mode is AccessMode.WriteOnly:
@@ -22,37 +30,53 @@ class proxy_property(): #Generic[T]
             raise Exception(f"Свойство '{self.propertyName}' недоступно для чтения/записи.")
         if instance is None:
             return self
-        # Если self.rettype_name - строка, динамически ищем класс
+
         target_type = None
         if self.rettype_name:
             try:
-                # Ищем класс в глобальной области видимости или области видимости владельца (owner)
                 target_type = globals().get(self.rettype_name) or getattr(owner, self.rettype_name, None)
                 if not target_type:
                     raise NameError(f"Тип '{self.rettype_name}' не найден.")
-                    # target_type = globals().get(self.rettype, None)
-            except Exception as e: 
-                # raise TypeError(f"Не удалось разрешить имя типа '{self.rettype_name}': {e}")
+            except Exception:
                 pass
         else:
             target_type = self.rettype
-        value = getattr(instance._obj, self.propertyName)
+
+        value = execute_com_call(
+            getattr,
+            instance._obj,
+            self.propertyName,
+            reconnect_func=self._reconnect_of(instance),
+            max_attempts=5,
+            base_delay=0.25,
+        )
+
         if not target_type:
             return value
-        else:
-            return target_type(value)
+        return target_type(value)
 
     def __set__(self, instance, value):
         if self.mode is AccessMode.ReadOnly:
             raise AttributeError(f"Свойство '{self.propertyName}' доступно только для чтения.")
         if self.mode is AccessMode.DenyFromAll:
             raise Exception(f"Свойство '{self.propertyName}' недоступно для чтения/записи.")
-        # Логика установки значения в базовый объект
+
         try:
-            if type(value).__mro__[-2] in (AppObject, Variant): value = value()
-            setattr(instance._obj, self.propertyName, value)
+            if type(value).__mro__[-2] in (AppObject, Variant):
+                value = value()
+            execute_com_call(
+                setattr,
+                instance._obj,
+                self.propertyName,
+                value,
+                reconnect_func=self._reconnect_of(instance),
+                max_attempts=5,
+                base_delay=0.25,
+            )
         except AttributeError:
-            raise AttributeError(f"Невозможно установить свойство '{self.propertyName}' в базовом объекте.")
+            raise AttributeError(
+                f"Невозможно установить свойство '{self.propertyName}' в базовом объекте."
+            )
 
 
 from ..Types import *
@@ -141,7 +165,6 @@ from .Objects.AcadViewport import AcadViewport
 from .Objects.AcadViewports import AcadViewports
 from .Objects.AcadViews import AcadViews
 from .Objects.AcadXRecord import AcadXRecord
-
 
 from .Entities.Acad3DFace import Acad3DFace
 from .Entities.Acad3DPolyline import Acad3DPolyline
