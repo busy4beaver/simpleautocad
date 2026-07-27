@@ -1,9 +1,22 @@
 from __future__ import annotations
-from ..Base import *
-from ..AcadObject import *
-from ..Proxy import *
-from .AcadState import AcadState
+
+from win32com.client import CDispatch
+from pythoncom import com_error
+
+from ..Base import (
+    Application,
+    AppObject,
+    get_clsid,
+    com_server_is_running,
+    AppCreate,
+    AppAttach,
+    create_new_instance_explicitly,
+)
+from ..Proxy import proxy_property, AccessMode
 from ...Utils.retry_com import retry_com
+from ...Types.Ge import PyGePoint3d
+from ...Types.VarType import vStringArray
+from .AcadState import AcadState
 
 
 class AcadApplication(Application, AppObject):
@@ -26,7 +39,6 @@ class AcadApplication(Application, AppObject):
             if not acad_app:
                 acad_app = AppCreate(AcadApplication.__app_full_name__)
         else:
-            # Исправлено: передаём CLSID, а не ProgID
             clsid = AcadApplication.__app_clsid__ or get_clsid(self)[0]
             acad_app = create_new_instance_explicitly(clsid)
             self._is_owner = True
@@ -34,16 +46,7 @@ class AcadApplication(Application, AppObject):
         return acad_app
 
     def _reconnect_com(self):
-        """
-        Восстанавливает связь с COM-сервером AutoCAD.
-
-        1. Пытается переподключиться к уже запущенному экземпляру (GetActiveObject).
-        2. Если не удалось — создаёт новый экземпляр.
-
-        Важно: после reconnect все ранее полученные дочерние объекты
-        (Document, Entity, SelectionSet и т.д.) могут быть невалидны.
-        Их нужно получить заново через ActiveDocument / Documents / ...
-        """
+        """Восстанавливает связь с COM-сервером AutoCAD."""
         prog_id = AcadApplication.__app_full_name__
         if not prog_id:
             clsid_info = get_clsid(self)
@@ -51,7 +54,6 @@ class AcadApplication(Application, AppObject):
             AcadApplication.__app_full_name__ = clsid_info[1]
             prog_id = clsid_info[1]
 
-        # 1. Попытка присоединиться к уже работающему AutoCAD
         try:
             attached = AppAttach(prog_id)
             if attached is not None:
@@ -61,37 +63,33 @@ class AcadApplication(Application, AppObject):
         except com_error:
             pass
 
-        # 2. Создаём новый экземпляр
         clsid = AcadApplication.__app_clsid__ or get_clsid(self)[0]
         self._set_com_obj(create_new_instance_explicitly(clsid))
         self._is_owner = True
 
-    ActiveDocument: AcadDocument = proxy_property('AcadDocument', 'ActiveDocument', AccessMode.ReadOnly)
-    Application: 'AcadApplication' = proxy_property('AcadApplication', 'Application', AccessMode.ReadOnly)
-    Caption: str = proxy_property(str, 'Caption', AccessMode.ReadOnly)
-    Documents: AcadDocuments = proxy_property('AcadDocuments', 'Documents', AccessMode.ReadOnly)
-    FullName: str = proxy_property(str, 'FullName', AccessMode.ReadOnly)
-    Height: float = proxy_property(float, 'Height', AccessMode.ReadWrite)
-    HWND: int = proxy_property(int, 'HWND', AccessMode.ReadOnly)
-    LocaleId: int = proxy_property(int, 'LocaleId', AccessMode.ReadOnly)
-    MenuBar: AcadMenuBar = proxy_property('AcadMenuBar', 'MenuBar', AccessMode.ReadOnly)
-    MenuGroups: AcadMenuGroups = proxy_property('AcadMenuGroups', 'MenuGroups', AccessMode.ReadOnly)
-    Name: str = proxy_property(str, 'Name', AccessMode.ReadOnly)
-    Path: str = proxy_property(str, 'Path', AccessMode.ReadOnly)
-    Preferences: AcadPreferences = proxy_property('AcadPreferences', 'Preferences', AccessMode.ReadOnly)
-    VBE: AppObject = proxy_property('AppObject', 'VBE', AccessMode.ReadOnly)
-    Version: str = proxy_property(str, 'Version', AccessMode.ReadOnly)
-    Visible: bool = proxy_property(bool, 'Visible', AccessMode.ReadWrite)
-    Width: float = proxy_property(float, 'Width', AccessMode.ReadWrite)
-    WindowLeft: int = proxy_property(int, 'WindowLeft', AccessMode.ReadWrite)
-    WindowState: int = proxy_property(int, 'WindowState', AccessMode.ReadWrite)
-    WindowTop: int = proxy_property(int, 'WindowTop', AccessMode.ReadWrite)
-
-    # Явные методы: self._obj уже _RetryComProxy → retry автоматический.
-    # @retry_com оставлен как дополнительная страховка + reconnect на Application.
+    ActiveDocument = proxy_property('AcadDocument', 'ActiveDocument', AccessMode.ReadOnly)
+    Application = proxy_property('AcadApplication', 'Application', AccessMode.ReadOnly)
+    Caption = proxy_property(str, 'Caption', AccessMode.ReadOnly)
+    Documents = proxy_property('AcadDocuments', 'Documents', AccessMode.ReadOnly)
+    FullName = proxy_property(str, 'FullName', AccessMode.ReadOnly)
+    Height = proxy_property(float, 'Height', AccessMode.ReadWrite)
+    HWND = proxy_property(int, 'HWND', AccessMode.ReadOnly)
+    LocaleId = proxy_property(int, 'LocaleId', AccessMode.ReadOnly)
+    MenuBar = proxy_property('AcadMenuBar', 'MenuBar', AccessMode.ReadOnly)
+    MenuGroups = proxy_property('AcadMenuGroups', 'MenuGroups', AccessMode.ReadOnly)
+    Name = proxy_property(str, 'Name', AccessMode.ReadOnly)
+    Path = proxy_property(str, 'Path', AccessMode.ReadOnly)
+    Preferences = proxy_property('AcadPreferences', 'Preferences', AccessMode.ReadOnly)
+    VBE = proxy_property('AppObject', 'VBE', AccessMode.ReadOnly)
+    Version = proxy_property(str, 'Version', AccessMode.ReadOnly)
+    Visible = proxy_property(bool, 'Visible', AccessMode.ReadWrite)
+    Width = proxy_property(float, 'Width', AccessMode.ReadWrite)
+    WindowLeft = proxy_property(int, 'WindowLeft', AccessMode.ReadWrite)
+    WindowState = proxy_property(int, 'WindowState', AccessMode.ReadWrite)
+    WindowTop = proxy_property(int, 'WindowTop', AccessMode.ReadWrite)
 
     @retry_com(max_attempts=5, base_delay=0.25)
-    def StatusID(self, VportObj: AcadViewport) -> bool:
+    def StatusID(self, VportObj) -> bool:
         return self._obj.StatusId(VportObj())
 
     @retry_com(max_attempts=5, base_delay=0.25)
@@ -159,7 +157,7 @@ class AcadApplication(Application, AppObject):
         self._obj.ZoomPrevious()
 
     @retry_com(max_attempts=5, base_delay=0.25)
-    def ZoomScaled(self, Scale: float, ScaleType: AcZoomScaleType) -> None:
+    def ZoomScaled(self, Scale: float, ScaleType) -> None:
         self._obj.ZoomScaled(Scale, ScaleType)
 
     @retry_com(max_attempts=5, base_delay=0.25)
