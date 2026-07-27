@@ -1,13 +1,13 @@
 from __future__ import annotations
-from ..Base import *
-from ..Proxy import *
-from ..Objects.AcadApplication import AcadApplication
+
+from ..Base import AppObject, AppObjectCollection
+from ..Proxy import proxy_property, AccessMode
 
 
 class AcadMenuBar(AppObjectCollection):
-    def __init__(self, obj) -> None: super().__init__(obj)
+    def __init__(self, obj) -> None:
+        super().__init__(obj)
 
-    Application: AcadApplication = proxy_property('AcadApplication','Application',AccessMode.ReadOnly)
-    Count: int = proxy_property(int,'Count',AccessMode.ReadOnly)
-    Parent: AppObject = proxy_property('AppObject','Parent',AccessMode.ReadWrite)
-
+    Application = proxy_property('AcadApplication', 'Application', AccessMode.ReadOnly)
+    Count = proxy_property(int, 'Count', AccessMode.ReadOnly)
+    Parent = proxy_property('AppObject', 'Parent', AccessMode.ReadWrite)

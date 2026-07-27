@@ -1,16 +1,18 @@
 from __future__ import annotations
-from ..Base import *
-from ..Proxy import *
-# from ..AcadObject import *
-from .AcadToolbar import *
+
+from ..Base import AppObject, AppObjectCollection
+from ..Proxy import proxy_property, AccessMode
+from .AcadToolbar import AcadToolbar
+
 
 class AcadToolbars(AppObjectCollection):
-    def __init__(self, obj) -> None: super().__init__(obj)
+    def __init__(self, obj) -> None:
+        super().__init__(obj)
 
-    Application: AcadApplication = proxy_property('AcadApplication','Application',AccessMode.ReadOnly)
-    Count: int = proxy_property(int,'Count',AccessMode.ReadOnly)
-    LargeButtons: bool = proxy_property(bool,'LargeButtons',AccessMode.ReadWrite)
-    Parent: AppObject = proxy_property('AppObject','Parent',AccessMode.ReadWrite)
+    Application = proxy_property('AcadApplication', 'Application', AccessMode.ReadOnly)
+    Count = proxy_property(int, 'Count', AccessMode.ReadOnly)
+    LargeButtons = proxy_property(bool, 'LargeButtons', AccessMode.ReadWrite)
+    Parent = proxy_property('AppObject', 'Parent', AccessMode.ReadWrite)
 
     def Add(self, Name: str) -> AcadToolbar:
         return AcadToolbar(self._obj.Add(Name))
@@ -20,5 +22,4 @@ class AcadToolbars(AppObjectCollection):
 
     def __iter__(self):
         for item in self._obj:
-            obj = AcadToolbar(item)
-            yield obj
+            yield AcadToolbar(item)
