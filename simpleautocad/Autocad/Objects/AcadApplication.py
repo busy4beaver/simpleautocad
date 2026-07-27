@@ -3,6 +3,7 @@ from ..Base import *
 from ..AcadObject import *
 from ..Proxy import *
 from .AcadState import AcadState
+from ...Utils.retry_com import retry_com
 
 
 class AcadApplication(Application, AppObject):
@@ -30,6 +31,11 @@ class AcadApplication(Application, AppObject):
         AcadApplication._first_instance_initialized = True
         return acad_app
 
+    def _reconnect_com(self):
+        # Пересоздаём COM-объект приложения
+        clsid = get_clsid(self)
+        self._obj = create_new_instance_explicitly(clsid[0])
+
     ActiveDocument: AcadDocument = proxy_property('AcadDocument','ActiveDocument',AccessMode.ReadOnly)
     Application: 'AcadApplication' = proxy_property('AcadApplication','Application',AccessMode.ReadOnly)
     Caption: str = proxy_property(str,'Caption', AccessMode.ReadOnly)
@@ -51,59 +57,78 @@ class AcadApplication(Application, AppObject):
     WindowState: int = proxy_property(int,'WindowState',AccessMode.ReadWrite)
     WindowTop: int = proxy_property(int,'WindowTop',AccessMode.ReadWrite)
 
+    @retry_com(max_attempts=3, base_delay=0.2)
     def StatusID(self, VportObj: AcadViewport) -> bool: 
         return self._obj.StatusId(VportObj())
 
+    @retry_com(max_attempts=3, base_delay=0.2)
     def Eval(self, Expression: str) -> None: 
         self._obj.Eval(Expression)
 
+    @retry_com(max_attempts=3, base_delay=0.2)
     def GetAcadState(self) -> AcadState: 
         return AcadState(self._obj.GetAcadState())
 
+    @retry_com(max_attempts=3, base_delay=0.2)
     def GetInterfaceObject(self, ProgID: str) -> AppObject: 
         return AppObject(self._obj.GetInterfaceObject(ProgID))
 
+    @retry_com(max_attempts=3, base_delay=0.2)
     def ListARX(self) -> vStringArray: 
         return vStringArray(self._obj.ListArx())
 
+    @retry_com(max_attempts=3, base_delay=0.2)
     def LoadARX(self, Name) -> None: 
         self._obj.LoadArx(Name)
 
+    @retry_com(max_attempts=3, base_delay=0.2)
     def LoadDVB(self, Name) -> None: 
         self._obj.LoadDVB(Name)
 
+    @retry_com(max_attempts=3, base_delay=0.2)
     def Quit(self) -> None: 
         self._obj.Quit()
 
+    @retry_com(max_attempts=3, base_delay=0.2)
     def RunMacro(self, MacroPath: str) -> None: 
         self._obj.RunMacro(MacroPath)
 
+    @retry_com(max_attempts=3, base_delay=0.2)
     def UnloadARX(self, Name: str) -> None:
         self._obj.UnloadArx(Name)
 
+    @retry_com(max_attempts=3, base_delay=0.2)
     def UnloadDVB(self, Name: str) -> None: 
         self._obj.UnloadDVB(Name)
 
+    @retry_com(max_attempts=3, base_delay=0.2)
     def Update(self) -> None: 
         self._obj.Update()
 
+    @retry_com(max_attempts=3, base_delay=0.2)
     def ZoomAll(self) -> None: 
         self._obj.ZoomAll()
 
+    @retry_com(max_attempts=3, base_delay=0.2)
     def ZoomCenter(self, Center: PyGePoint3d, Magnify: float) -> None: 
         self._obj.ZoomCenter(Center(), Magnify)
 
+    @retry_com(max_attempts=3, base_delay=0.2)
     def ZoomExtents(self) -> None: 
         self._obj.ZoomExtents()
 
+    @retry_com(max_attempts=3, base_delay=0.2)
     def ZoomPickWindow(self) -> None: 
         self._obj.ZoomPickWindow()
 
+    @retry_com(max_attempts=3, base_delay=0.2)
     def ZoomPrevious(self) -> None: 
         self._obj.ZoomPrevious()
 
+    @retry_com(max_attempts=3, base_delay=0.2)
     def ZoomScaled(self, Scale: float, ScaleType: AcZoomScaleType) -> None: 
         self._obj.ZoomScaled(Scale, ScaleType)
 
+    @retry_com(max_attempts=3, base_delay=0.2)
     def ZoomWindow(self, LowerLeft: PyGePoint3d, UpperRight: PyGePoint3d) -> None: 
         self._obj.ZoomWindow(LowerLeft(), UpperRight())

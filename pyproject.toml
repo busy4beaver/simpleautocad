@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "simpleautocad"
-version = "1.0.2"
+version = "1.1.2"
 description = "Модуль для работы с AutoCAD через COM интерфейс"
 readme = "README.md"
 authors = [
@@ -33,7 +33,7 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Operating System :: Microsoft :: Windows",
-    "Topic :: Software Development :: Multimedia :: Graphics :: 3D Modeling"
+    "Topic :: Multimedia :: Graphics :: 3D Modeling"
 ]
 
 [project.scripts]
