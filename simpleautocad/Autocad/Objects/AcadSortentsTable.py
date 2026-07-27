@@ -1,16 +1,18 @@
 from __future__ import annotations
-from ..Base import *
-from ..Proxy import *
-from ..AcadObject import *
-from ..AcadEntity import *
 
+from ..Proxy import proxy_property, AccessMode
+from ..AcadObject import AcadObject
+from ..AcadEntity import AcadEntity
+from ...Types.VarType import vObjectArray
 
 
 class AcadSortentsTable(AcadObject):
-    def __init__(self, obj) -> None: super().__init__(obj)
+    def __init__(self, obj) -> None:
+        super().__init__(obj)
 
-    def Block(self) -> AcadBlock:
-        return AcadBlock(self._obj.GetFont())
+    def Block(self):
+        from .AcadBlock import AcadBlock
+        return AcadBlock(self._obj.Block)
 
     def GetFullDrawOrder(self, honorSortentsSysvar: bool) -> vObjectArray:
         Objects = self._obj.GetFullDrawOrder(honorSortentsSysvar)
