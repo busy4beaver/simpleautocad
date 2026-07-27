@@ -1,12 +1,12 @@
 from __future__ import annotations
-from ..Base import *
-from ..Proxy import *
-from .AcadSubEntity import *
 
+from ..Proxy import proxy_property, AccessMode
+from .AcadSubEntity import AcadSubEntity
 
 
 class AcadSubDMeshEdge(AcadSubEntity):
-    def __init__(self, obj) -> None: super().__init__(obj)
+    def __init__(self, obj) -> None:
+        super().__init__(obj)
 
-    CreaseLevel: float = proxy_property(float,'CreaseLevel',AccessMode.ReadWrite)
-    CreaseType: AcMeshCreaseType = proxy_property('AcMeshCreaseType','CreaseType',AccessMode.ReadWrite)
+    CreaseLevel = proxy_property(float, 'CreaseLevel', AccessMode.ReadWrite)
+    CreaseType = proxy_property('AcMeshCreaseType', 'CreaseType', AccessMode.ReadWrite)
