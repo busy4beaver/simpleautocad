@@ -1,21 +1,34 @@
 from __future__ import annotations
-from ..Base import *
-from ..Proxy import *
-from ..AcadObject import *
+
+from ..Proxy import proxy_property, AccessMode
+from ..AcadObject import AcadObject
+from ..Objects.AcadAcCmColor import AcadAcCmColor
+from ...Types.VarType import Variant
+from ...Types.Ac import (
+    AcRowType,
+    AcCellAlignment,
+    AcValueDataType,
+    AcValueUnitType,
+    AcGridLineType,
+    AcLineWeight,
+    AcMergeCellStyleOption,
+)
+
 
 class AcadTableStyle(AcadObject):
-    def __init__(self, obj) -> None: super().__init__(obj)
-    
-    BitFlags: int = proxy_property(int,'BitFlags',AccessMode.ReadWrite)
-    Description: str = proxy_property(str,'Description',AccessMode.ReadWrite)
-    FlowDirection: AcTableDirection = proxy_property('AcTableDirection','FlowDirection',AccessMode.ReadWrite)
-    HeaderSuppressed: bool = proxy_property(bool,'HeaderSuppressed',AccessMode.ReadWrite)
-    HorzCellMargin: float = proxy_property(float,'HorzCellMargin',AccessMode.ReadWrite)
-    Name: str = proxy_property(str,'Name',AccessMode.ReadWrite)
-    NumCellStyles: int = proxy_property(int,'NumCellStyles',AccessMode.ReadOnly)
-    TemplateId: int = proxy_property(int,'TemplateId',AccessMode.ReadWrite)
-    TitleSuppressed: bool = proxy_property(bool,'TitleSuppressed',AccessMode.ReadWrite)
-    VertCellMargin: float = proxy_property(float,'VertCellMargin',AccessMode.ReadWrite)
+    def __init__(self, obj) -> None:
+        super().__init__(obj)
+
+    BitFlags = proxy_property(int, 'BitFlags', AccessMode.ReadWrite)
+    Description = proxy_property(str, 'Description', AccessMode.ReadWrite)
+    FlowDirection = proxy_property('AcTableDirection', 'FlowDirection', AccessMode.ReadWrite)
+    HeaderSuppressed = proxy_property(bool, 'HeaderSuppressed', AccessMode.ReadWrite)
+    HorzCellMargin = proxy_property(float, 'HorzCellMargin', AccessMode.ReadWrite)
+    Name = proxy_property(str, 'Name', AccessMode.ReadWrite)
+    NumCellStyles = proxy_property(int, 'NumCellStyles', AccessMode.ReadOnly)
+    TemplateId = proxy_property(int, 'TemplateId', AccessMode.ReadWrite)
+    TitleSuppressed = proxy_property(bool, 'TitleSuppressed', AccessMode.ReadWrite)
+    VertCellMargin = proxy_property(float, 'VertCellMargin', AccessMode.ReadWrite)
 
     def CreateCellStyle(self, StringCellStyle: str) -> None:
         self._obj.CreateCellStyle(StringCellStyle)
@@ -48,8 +61,7 @@ class AcadTableStyle(AcadObject):
         return self._obj.GetCellClass(StringCellStyle)
 
     def GetCellStyles(self) -> Variant:
-        cellStylesArray = self._obj.GetCellStyles()
-        return Variant(cellStylesArray)
+        return Variant(self._obj.GetCellStyles())
 
     def GetColor(self, rowType: AcRowType) -> AcadAcCmColor:
         return AcadAcCmColor(self._obj.GetColor(rowType))
@@ -69,8 +81,7 @@ class AcadTableStyle(AcadObject):
         return self._obj.GetFormat(rowType)
 
     def GetFormat2(self, StringCellStyle: str) -> str:
-        pbstrFormat = self._obj.GetFormat2(StringCellStyle)
-        return pbstrFormat
+        return self._obj.GetFormat2(StringCellStyle)
 
     def GetGridColor(self, gridLineType: AcGridLineType, rowType: AcRowType) -> AcadAcCmColor:
         return AcadAcCmColor(self._obj.GetGridColor(gridLineType, rowType))
