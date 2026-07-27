@@ -1,24 +1,25 @@
 from __future__ import annotations
-from ..Base import *
-from ..Proxy import *
-from ..AcadEntity import AcadEntity
 
+from ..Proxy import proxy_property, AccessMode
+from ..AcadEntity import AcadEntity
+from ...Types.VarType import vObjectArray
 
 
 class AcadArc(AcadEntity):
-    def __init__(self, obj) -> None: super().__init__(obj)
+    def __init__(self, obj) -> None:
+        super().__init__(obj)
 
-    ArcLength: float = proxy_property(float,'ArcLength',AccessMode.ReadOnly)
-    Area: float = proxy_property(float,'Area',AccessMode.ReadOnly)
-    Center: PyGePoint3d = proxy_property('PyGePoint3d','Center',AccessMode.ReadWrite)
-    EndAngle: float = proxy_property(float,'EndAngle',AccessMode.ReadWrite)
-    EndPoint: PyGePoint3d = proxy_property('PyGePoint3d','EndPoint',AccessMode.ReadOnly)
-    Normal: PyGeVector3d = proxy_property('PyGeVector3d','Normal',AccessMode.ReadWrite)
-    Radius: float = proxy_property(float,'Radius',AccessMode.ReadWrite)
-    StartAngle: float = proxy_property(float,'StartAngle',AccessMode.ReadWrite)
-    StartPoint: PyGePoint3d = proxy_property('PyGePoint3d','StartPoint',AccessMode.ReadWrite)
-    Thickness: float = proxy_property(float,'Thickness',AccessMode.ReadWrite)
-    TotalAngle: float = proxy_property(float,'TotalAngle',AccessMode.ReadOnly)
+    ArcLength = proxy_property(float, 'ArcLength', AccessMode.ReadOnly)
+    Area = proxy_property(float, 'Area', AccessMode.ReadOnly)
+    Center = proxy_property('PyGePoint3d', 'Center', AccessMode.ReadWrite)
+    EndAngle = proxy_property(float, 'EndAngle', AccessMode.ReadWrite)
+    EndPoint = proxy_property('PyGePoint3d', 'EndPoint', AccessMode.ReadOnly)
+    Normal = proxy_property('PyGeVector3d', 'Normal', AccessMode.ReadWrite)
+    Radius = proxy_property(float, 'Radius', AccessMode.ReadWrite)
+    StartAngle = proxy_property(float, 'StartAngle', AccessMode.ReadWrite)
+    StartPoint = proxy_property('PyGePoint3d', 'StartPoint', AccessMode.ReadWrite)
+    Thickness = proxy_property(float, 'Thickness', AccessMode.ReadWrite)
+    TotalAngle = proxy_property(float, 'TotalAngle', AccessMode.ReadOnly)
 
     def Copy(self) -> AcadArc:
         return AcadArc(self._obj.Copy())
