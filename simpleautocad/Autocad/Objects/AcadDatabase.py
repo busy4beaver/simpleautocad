@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from ..Base import AppObject
 from ..Proxy import proxy_property, AccessMode
-from ...Types.VarType import vObjectArray, vObject, vObjectEmpty
+from ...Types.VarType import vObjectArray, vObjectEmpty, vObject
 from .AcadBlocks import AcadBlocks
 from .AcadDictionaries import AcadDictionaries
 from .AcadDimStyles import AcadDimStyles
