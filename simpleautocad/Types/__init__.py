@@ -1,4 +1,69 @@
-from .VarType import *
-from .Ac import *
-from .Xdata import *
-from .Ge import *
+from .VarType import (
+    is_iterable,
+    flatten_generic,
+    VT,
+    Variant,
+    vObjectEmpty,
+    vObject,
+    vDouble,
+    vLong,
+    vInteger,
+    vShort,
+    vBool,
+    vString,
+    vArray,
+    vObjectArray,
+    vVariantArray,
+    vDoubleArray,
+    vLongArray,
+    vStringArray,
+    vIntegerArray,
+    vBoolArray,
+    vShortArray,
+)
+from .Ac import *  # noqa: F401,F403 — большой набор enum Ac*
+from .Xdata import DxfGroupXDCode, XDataManager
+from .Ge import (
+    PyGePoint3d,
+    PyGePoint3dArray,
+    PyGePoint2d,
+    PyGePoint2dArray,
+    PyGeVector3d,
+    PyGeVector2d,
+    PyGeMatrix3d,
+    PyGeMatrix2d,
+)
+
+__all__ = [
+    'is_iterable',
+    'flatten_generic',
+    'VT',
+    'Variant',
+    'vObjectEmpty',
+    'vObject',
+    'vDouble',
+    'vLong',
+    'vInteger',
+    'vShort',
+    'vBool',
+    'vString',
+    'vArray',
+    'vObjectArray',
+    'vVariantArray',
+    'vDoubleArray',
+    'vLongArray',
+    'vStringArray',
+    'vIntegerArray',
+    'vBoolArray',
+    'vShortArray',
+    'DxfGroupXDCode',
+    'XDataManager',
+    'PyGePoint3d',
+    'PyGePoint3dArray',
+    'PyGePoint2d',
+    'PyGePoint2dArray',
+    'PyGeVector3d',
+    'PyGeVector2d',
+    'PyGeMatrix3d',
+    'PyGeMatrix2d',
+]
