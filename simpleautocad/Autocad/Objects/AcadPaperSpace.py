@@ -1,15 +1,16 @@
 from __future__ import annotations
-from ..Base import *
-from ..Proxy import *
-from ..AcadObject import *
+
+from ..Proxy import proxy_property, AccessMode
+from ...Types.Ge import PyGePoint3d
 from .AcadBlock import IAcadBlock
 
 
 class AcadPaperSpace(IAcadBlock):
-    def __init__(self, obj) -> None: super().__init__(obj)
+    def __init__(self, obj) -> None:
+        super().__init__(obj)
 
-    Name: str = proxy_property(str,'Name',AccessMode.ReadOnly)
+    Name = proxy_property(str, 'Name', AccessMode.ReadOnly)
 
-    def AddPViewport(self, Center: PyGePoint3d, Width: float, Height: float) -> AcadPViewport:
+    def AddPViewport(self, Center: PyGePoint3d, Width: float, Height: float):
+        from ..Entities.AcadPViewport import AcadPViewport
         return AcadPViewport(self._obj.AddPViewport(Center(), Width, Height))
-
