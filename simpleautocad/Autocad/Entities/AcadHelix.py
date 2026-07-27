@@ -1,23 +1,23 @@
 from __future__ import annotations
-from ..Base import *
-from ..Proxy import *
+
+from ..Proxy import proxy_property, AccessMode
 from ..AcadEntity import AcadEntity
 
 
-
 class AcadHelix(AcadEntity):
-    def __init__(self, obj) -> None: super().__init__(obj)
+    def __init__(self, obj) -> None:
+        super().__init__(obj)
 
-    BaseRadius: float = proxy_property(float,'BaseRadius',AccessMode.ReadWrite)
-    Constrain: AcHelixConstrainType = proxy_property('AcHelixConstrainType','Constrain',AccessMode.ReadWrite)
-    Height: float = proxy_property(float,'Height',AccessMode.ReadWrite)
-    Position: PyGePoint3d = proxy_property('PyGePoint3d','Position',AccessMode.ReadWrite)
-    TopRadius: float = proxy_property(float,'TopRadius',AccessMode.ReadWrite)
-    TotalLength: float = proxy_property(float,'TotalLength',AccessMode.ReadWrite)
-    TurnHeight: float = proxy_property(float,'TurnHeight',AccessMode.ReadWrite)
-    Turns: int = proxy_property(int,'Turns',AccessMode.ReadWrite)
-    TurnSlope: float = proxy_property(float,'TurnSlope',AccessMode.ReadWrite)
-    Twist: AcHelixTwistType = proxy_property('AcHelixTwistType','Twist',AccessMode.ReadWrite)
+    BaseRadius = proxy_property(float, 'BaseRadius', AccessMode.ReadWrite)
+    Constrain = proxy_property('AcHelixConstrainType', 'Constrain', AccessMode.ReadWrite)
+    Height = proxy_property(float, 'Height', AccessMode.ReadWrite)
+    Position = proxy_property('PyGePoint3d', 'Position', AccessMode.ReadWrite)
+    TopRadius = proxy_property(float, 'TopRadius', AccessMode.ReadWrite)
+    TotalLength = proxy_property(float, 'TotalLength', AccessMode.ReadWrite)
+    TurnHeight = proxy_property(float, 'TurnHeight', AccessMode.ReadWrite)
+    Turns = proxy_property(int, 'Turns', AccessMode.ReadWrite)
+    TurnSlope = proxy_property(float, 'TurnSlope', AccessMode.ReadWrite)
+    Twist = proxy_property('AcHelixTwistType', 'Twist', AccessMode.ReadWrite)
 
     def Copy(self) -> AcadHelix:
         return AcadHelix(self._obj.Copy())
