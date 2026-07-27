@@ -6,7 +6,6 @@ from ..Base import AppObject
 from ..AcadObject import AcadObject
 from ...Types.Ge import PyGePoint3d, PyGeVector3d
 from ...Types.VarType import vObjectEmpty
-from ...Types.Ac import AcAngleUnits, AcUnits, AcCoordinateSystem
 
 
 class AcadUtility(AppObject):
@@ -16,18 +15,18 @@ class AcadUtility(AppObject):
     def AngleFromXAxis(self, Point1: PyGePoint3d, Point2: PyGePoint3d) -> float:
         return self._obj.AngleFromXAxis(Point1(), Point2())
 
-    def AngleToReal(self, Angle: str, Unit: AcAngleUnits) -> float:
+    def AngleToReal(self, Angle: str, Unit) -> float:
         return self._obj.AngleToReal(Angle, Unit)
 
-    def AngleToString(self, Angle: float, Unit: AcAngleUnits, Precision: int) -> str:
+    def AngleToString(self, Angle: float, Unit, Precision: int) -> str:
         return self._obj.AngleToString(Angle, Unit, Precision)
 
-    def CreateTypedArray(self, Type: 'VbVarType', Value1, *args):
+    def CreateTypedArray(self, Type, Value1, *args):
         VarArr = vObjectEmpty
         self._obj.CreateTypedArray(VarArr, Type, Value1, *args)
         return VarArr
 
-    def DistanceToReal(self, Distance: str, Unit: AcUnits) -> float:
+    def DistanceToReal(self, Distance: str, Unit) -> float:
         return self._obj.DistanceToReal(Distance, Unit)
 
     def GetAngle(self, Point: PyGePoint3d = None, Prompt: str = '') -> float:
@@ -68,12 +67,12 @@ class AcadUtility(AppObject):
     def GetReal(self, Prompt: str = '') -> float:
         return self._obj.GetReal(Prompt)
 
-    def GetRemoteFile(self, URL: str, IgnoreCache: bool) -> str:
-        LocalFile: str = ''
+    def GetRemoteFile(self, URL: str, IgnoreCache: bool):
+        LocalFile = ''
         self._obj.GetRemoteFile(URL, LocalFile, IgnoreCache)
         return LocalFile
 
-    def GetString(self, HasSpaces: int, Prompt: str = '') -> str:
+    def GetString(self, HasSpaces: int, Prompt: str = ''):
         return self._obj.GetString(HasSpaces, Prompt)
 
     def GetSubEntity(self, Prompt: str = '') -> tuple:
@@ -100,10 +99,14 @@ class AcadUtility(AppObject):
         RegistryRootKey: str,
         OpenButtonAlwaysEnabled: bool,
     ) -> bool:
-        SelectedURL: str = ''
+        SelectedURL = ''
         return self._obj.LaunchBrowserDialog(
-            SelectedURL, DialogTitle, OpenButtonCaption,
-            StartPageURL, RegistryRootKey, OpenButtonAlwaysEnabled,
+            SelectedURL,
+            DialogTitle,
+            OpenButtonCaption,
+            StartPageURL,
+            RegistryRootKey,
+            OpenButtonAlwaysEnabled,
         )
 
     def PolarPoint(self, Point: PyGePoint3d, Angle: float, Distance: float) -> PyGePoint3d:
@@ -115,7 +118,7 @@ class AcadUtility(AppObject):
     def PutRemoteFile(self, URL: str, LocalFile: str) -> None:
         self._obj.PutRemoteFile(URL, LocalFile)
 
-    def RealToString(self, Value: float, Unit: AcUnits, Precision: int) -> str:
+    def RealToString(self, Value: float, Unit, Precision: int) -> str:
         return self._obj.RealToString(Value, Unit, Precision)
 
     def SendModelessOperationEnded(self) -> str:
@@ -127,8 +130,8 @@ class AcadUtility(AppObject):
     def TranslateCoordinates(
         self,
         Point: PyGePoint3d,
-        FromCoordSystem: AcCoordinateSystem,
-        ToCoordSystem: AcCoordinateSystem,
+        FromCoordSystem,
+        ToCoordSystem,
         Displacement: int,
         OCSNormal: PyGeVector3d = None,
     ) -> tuple:

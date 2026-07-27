@@ -6,10 +6,10 @@ from pythoncom import com_error
 from ..Base import (
     Application,
     AppObject,
+    AppAttach,
+    AppCreate,
     get_clsid,
     com_server_is_running,
-    AppCreate,
-    AppAttach,
     create_new_instance_explicitly,
 )
 from ..Proxy import proxy_property, AccessMode
@@ -46,7 +46,16 @@ class AcadApplication(Application, AppObject):
         return acad_app
 
     def _reconnect_com(self):
-        """Восстанавливает связь с COM-сервером AutoCAD."""
+        """
+        Восстанавливает связь с COM-сервером AutoCAD.
+
+        1. Пытается переподключиться к уже запущенному экземпляру (GetActiveObject).
+        2. Если не удалось — создаёт новый экземпляр.
+
+        Важно: после reconnect все ранее полученные дочерние объекты
+        (Document, Entity, SelectionSet и т.д.) могут быть невалидны.
+        Их нужно получить заново через ActiveDocument / Documents / ...
+        """
         prog_id = AcadApplication.__app_full_name__
         if not prog_id:
             clsid_info = get_clsid(self)
