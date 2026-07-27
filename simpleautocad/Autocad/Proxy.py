@@ -1,5 +1,16 @@
+"""
+proxy_property и AccessMode — без импорта Object/Entity классов.
+
+Типы по строковому имени ('AcadDocument', 'PyGePoint3d', …)
+резолвятся лениво при первом обращении к свойству.
+Это разрывает цикл: Entity → Proxy → Entity.
+"""
 from __future__ import annotations
+
+import importlib
+import sys
 from enum import IntEnum
+from typing import Any, Optional
 
 from ..Utils.retry_com import execute_com_call
 
@@ -11,10 +22,94 @@ class AccessMode(IntEnum):
     DenyFromAll = 3
 
 
-class proxy_property():  # Generic[T]
-    def __init__(self, rettype: type, propertyName: str, mode: AccessMode):
-        # Храним как строку ИЛИ как класс
-        self.rettype_name = rettype if isinstance(rettype, str) else None
+_TYPE_CACHE: dict[str, Any] = {}
+
+# Модули, где обычно лежат обёртки / enum / геометрия
+_TYPE_MODULES = (
+    'simpleautocad.Types.VarType',
+    'simpleautocad.Types.Ac',
+    'simpleautocad.Types.Xdata',
+    'simpleautocad.Types.Ge',
+    'simpleautocad.Types.Ge.Points',
+    'simpleautocad.Types.Ge.Vector',
+    'simpleautocad.Types.Ge.Matrix',
+    'simpleautocad.Types',
+    'simpleautocad.Autocad.Base',
+    'simpleautocad.Autocad.AcadObject',
+    'simpleautocad.Autocad.AcadEntity',
+)
+
+
+def resolve_type(name: str) -> Any:
+    """Находит класс/тип по имени без циклических импортов Proxy."""
+    if name in _TYPE_CACHE:
+        return _TYPE_CACHE[name]
+
+    builtins_map = {'int': int, 'float': float, 'str': str, 'bool': bool, 'tuple': tuple, 'list': list}
+    if name in builtins_map:
+        _TYPE_CACHE[name] = builtins_map[name]
+        return builtins_map[name]
+
+    # Уже загруженные модули пакета
+    for mod_name, mod in list(sys.modules.items()):
+        if mod is None or not str(mod_name).startswith('simpleautocad'):
+            continue
+        obj = getattr(mod, name, None)
+        if obj is not None and (isinstance(obj, type) or callable(obj)):
+            _TYPE_CACHE[name] = obj
+            return obj
+
+    candidates: list[str] = []
+    if name.startswith('Acad') or name.startswith('IAcad'):
+        candidates.extend((
+            f'simpleautocad.Autocad.Objects.{name}',
+            f'simpleautocad.Autocad.Entities.{name}',
+        ))
+    candidates.extend(_TYPE_MODULES)
+
+    for path in candidates:
+        try:
+            mod = importlib.import_module(path)
+        except Exception:
+            continue
+        obj = getattr(mod, name, None)
+        if obj is not None:
+            _TYPE_CACHE[name] = obj
+            return obj
+
+    raise NameError(f"Тип '{name}' не найден.")
+
+
+def _unwrap_for_com(value: Any) -> Any:
+    """AppObject / Variant / proxy → значение, пригодное для setattr COM."""
+    if value is None or isinstance(value, (bool, int, float, str, bytes)):
+        return value
+    # AppObject: __call__ → _raw_obj
+    if hasattr(value, '_raw_obj') and callable(value):
+        try:
+            return value()
+        except Exception:
+            pass
+    # Variant: to_variant / __call__
+    if hasattr(value, 'to_variant') and callable(value):
+        try:
+            return value()
+        except Exception:
+            pass
+    # _RetryComProxy
+    if type(value).__name__ == '_RetryComProxy':
+        try:
+            return object.__getattribute__(value, '_com')
+        except Exception:
+            pass
+    return value
+
+
+class proxy_property:
+    """Дескриптор свойства COM с retry и ленивым приведением типа."""
+
+    def __init__(self, rettype: Any, propertyName: str, mode: AccessMode):
+        self.rettype_name: Optional[str] = rettype if isinstance(rettype, str) else None
         self.rettype = rettype
         self.propertyName = propertyName
         self.mode = mode
@@ -23,6 +118,15 @@ class proxy_property():  # Generic[T]
         fn = getattr(instance, '_reconnect_com', None)
         return fn if callable(fn) else None
 
+    def _target_type(self, owner):
+        if self.rettype_name:
+            try:
+                return resolve_type(self.rettype_name)
+            except NameError:
+                # fallback: атрибут класса-владельца
+                return getattr(owner, self.rettype_name, None)
+        return self.rettype
+
     def __get__(self, instance, owner):
         if self.mode is AccessMode.WriteOnly:
             raise Exception(f"Свойство '{self.propertyName}' доступно только для записи.")
@@ -30,17 +134,6 @@ class proxy_property():  # Generic[T]
             raise Exception(f"Свойство '{self.propertyName}' недоступно для чтения/записи.")
         if instance is None:
             return self
-
-        target_type = None
-        if self.rettype_name:
-            try:
-                target_type = globals().get(self.rettype_name) or getattr(owner, self.rettype_name, None)
-                if not target_type:
-                    raise NameError(f"Тип '{self.rettype_name}' не найден.")
-            except Exception:
-                pass
-        else:
-            target_type = self.rettype
 
         value = execute_com_call(
             getattr,
@@ -51,9 +144,13 @@ class proxy_property():  # Generic[T]
             base_delay=0.25,
         )
 
-        if not target_type:
+        target_type = self._target_type(owner)
+        if not target_type or target_type in (int, float, str, bool, type(None)):
             return value
-        return target_type(value)
+        try:
+            return target_type(value)
+        except Exception:
+            return value
 
     def __set__(self, instance, value):
         if self.mode is AccessMode.ReadOnly:
@@ -61,9 +158,8 @@ class proxy_property():  # Generic[T]
         if self.mode is AccessMode.DenyFromAll:
             raise Exception(f"Свойство '{self.propertyName}' недоступно для чтения/записи.")
 
+        value = _unwrap_for_com(value)
         try:
-            if type(value).__mro__[-2] in (AppObject, Variant):
-                value = value()
             execute_com_call(
                 setattr,
                 instance._obj,
@@ -76,157 +172,4 @@ class proxy_property():  # Generic[T]
         except AttributeError:
             raise AttributeError(
                 f"Невозможно установить свойство '{self.propertyName}' в базовом объекте."
-            )
-
-
-from ..Types import *
-from .Base import *
-
-from .Objects.AcadAcCmColor import AcadAcCmColor
-from .Objects.AcadApplication import AcadApplication
-from .Objects.AcadBlock import AcadBlock
-from .Objects.AcadBlocks import AcadBlocks
-from .Objects.AcadDatabase import AcadDatabase, IAcadDatabase
-from .Objects.AcadDatabasePreferences import AcadDatabasePreferences
-from .Objects.AcadDictionaries import AcadDictionaries
-from .Objects.AcadDictionary import AcadDictionary
-from .Objects.AcadDimStyle import AcadDimStyle
-from .Objects.AcadDimStyles import AcadDimStyles
-from .Objects.AcadDocument import AcadDocument
-from .Objects.AcadDocuments import AcadDocuments
-from .Objects.AcadDynamicBlockReferenceProperty import AcadDynamicBlockReferenceProperty
-from .Objects.AcadGroup import AcadGroup
-from .Objects.AcadGroups import AcadGroups
-from .Objects.AcadHyperlink import AcadHyperlink
-from .Objects.AcadHyperlinks import AcadHyperlinks
-from .Objects.AcadIDPair import AcadIDPair
-from .Objects.AcadLayer import AcadLayer
-from .Objects.AcadLayers import AcadLayers
-from .Objects.AcadLayerStateManager import AcadLayerStateManager
-from .Objects.AcadLayout import AcadLayout
-from .Objects.AcadLayouts import AcadLayouts
-from .Objects.AcadLineType import AcadLineType
-from .Objects.AcadLineTypes import AcadLineTypes
-from .Objects.AcadMaterial import AcadMaterial
-from .Objects.AcadMaterials import AcadMaterials
-from .Objects.AcadMenuBar import AcadMenuBar
-from .Objects.AcadMenuGroup import AcadMenuGroup
-from .Objects.AcadMenuGroups import AcadMenuGroups
-from .Objects.AcadMLeaderLeader import AcadMLeaderLeader
-from .Objects.AcadMLeaderStyle import AcadMLeaderStyle
-from .Objects.AcadModelSpace import AcadModelSpace
-from .Objects.AcadPaperSpace import AcadPaperSpace
-from .Objects.AcadPlot import AcadPlot
-from .Objects.AcadPlotConfiguration import AcadPlotConfiguration
-from .Objects.AcadPlotConfigurations import AcadPlotConfigurations
-from .Objects.AcadPopupMenu import AcadPopupMenu
-from .Objects.AcadPopupMenuItem import AcadPopupMenuItem
-from .Objects.AcadPopupMenus import AcadPopupMenus
-from .Objects.AcadPreferences import AcadPreferences
-from .Objects.AcadPreferencesDisplay import AcadPreferencesDisplay
-from .Objects.AcadPreferencesDrafting import AcadPreferencesDrafting
-from .Objects.AcadPreferencesFiles import AcadPreferencesFiles
-from .Objects.AcadPreferencesOpenSave import AcadPreferencesOpenSave
-from .Objects.AcadPreferencesOutput import AcadPreferencesOutput
-from .Objects.AcadPreferencesProfiles import AcadPreferencesProfiles
-from .Objects.AcadPreferencesSelection import AcadPreferencesSelection
-from .Objects.AcadPreferencesSystem import AcadPreferencesSystem
-from .Objects.AcadPreferencesUser import AcadPreferencesUser
-from .Objects.AcadRegisteredApplication import AcadRegisteredApplication
-from .Objects.AcadRegisteredApplications import AcadRegisteredApplications
-from .Objects.AcadSectionManager import AcadSectionManager
-from .Objects.AcadSectionSettings import AcadSectionSettings
-from .Objects.AcadSectionTypeSettings import AcadSectionTypeSettings
-from .Objects.AcadSecurityParams import AcadSecurityParams
-from .Objects.AcadSelectionSet import AcadSelectionSet
-from .Objects.AcadSelectionSets import AcadSelectionSets
-from .Objects.AcadSortentsTable import AcadSortentsTable
-from .Objects.AcadState import AcadState
-from .Objects.AcadSubDMeshEdge import AcadSubDMeshEdge
-from .Objects.AcadSubDMeshFace import AcadSubDMeshFace
-from .Objects.AcadSubDMeshVertex import AcadSubDMeshVertex
-from .Objects.AcadSubEntSolidEdge import AcadSubEntSolidEdge
-from .Objects.AcadSubEntSolidFace import AcadSubEntSolidFace
-from .Objects.AcadSubEntSolidNode import AcadSubEntSolidNode
-from .Objects.AcadSubEntSolidVertex import AcadSubEntSolidVertex
-from .Objects.AcadSummaryInfo import AcadSummaryInfo
-from .Objects.AcadTableStyle import AcadTableStyle
-from .Objects.AcadSubEntity import AcadSubEntity
-from .Objects.AcadTextStyle import AcadTextStyle
-from .Objects.AcadTextStyles import AcadTextStyles
-from .Objects.AcadToolbar import AcadToolbar
-from .Objects.AcadToolbarItem import AcadToolbarItem
-from .Objects.AcadToolbars import AcadToolbars
-from .Objects.AcadUCS import AcadUCS
-from .Objects.AcadUCSs import AcadUCSs
-from .Objects.AcadUtility import AcadUtility
-from .Objects.AcadView import AcadView
-from .Objects.AcadViewport import AcadViewport
-from .Objects.AcadViewports import AcadViewports
-from .Objects.AcadViews import AcadViews
-from .Objects.AcadXRecord import AcadXRecord
-
-from .Entities.Acad3DFace import Acad3DFace
-from .Entities.Acad3DPolyline import Acad3DPolyline
-from .Entities.Acad3DSolid import Acad3DSolid
-from .Entities.AcadArc import AcadArc
-from .Entities.AcadAttribute import AcadAttribute
-from .Entities.AcadAttributeReference import AcadAttributeReference
-from .Entities.AcadBlockReference import AcadBlockReference
-from .Entities.AcadCircle import AcadCircle
-from .Entities.AcadComparedReference import AcadComparedReference
-from .Entities.AcadDgnUnderlay import AcadDgnUnderlay
-from .Entities.AcadDim3PointAngular import AcadDim3PointAngular
-from .Entities.AcadDimAligned import AcadDimAligned
-from .Entities.AcadDimAngular import AcadDimAngular
-from .Entities.AcadDimArcLength import AcadDimArcLength
-from .Entities.AcadDimDiametric import AcadDimDiametric
-from .Entities.AcadDimension import AcadDimension
-from .Entities.AcadDimOrdinate import AcadDimOrdinate
-from .Entities.AcadDimRadial import AcadDimRadial
-from .Entities.AcadDimRadialLarge import AcadDimRadialLarge
-from .Entities.AcadDimRotated import AcadDimRotated
-from .Entities.AcadDwfUnderlay import AcadDwfUnderlay
-from .Entities.AcadEllipse import AcadEllipse
-from .Entities.AcadExternalReference import AcadExternalReference
-from .Entities.AcadExtrudedSurface import AcadExtrudedSurface
-from .Entities.AcadGeomapImage import AcadGeomapImage
-from .Entities.AcadGeoPositionMarker import AcadGeoPositionMarker
-from .Entities.AcadHatch import AcadHatch
-from .Entities.AcadHelix import AcadHelix
-from .Entities.AcadLeader import AcadLeader
-from .Entities.AcadLine import AcadLine
-from .Entities.AcadLoftedSurface import AcadLoftedSurface
-from .Entities.AcadLWPolyline import AcadLWPolyline
-from .Entities.AcadMInsertBlock import AcadMInsertBlock
-from .Entities.AcadMLeader import AcadMLeader
-from .Entities.AcadMLine import AcadMLine
-from .Entities.AcadMtext import AcadMtext
-from .Entities.AcadNurbSurface import AcadNurbSurface
-from .Entities.AcadOle import AcadOle
-from .Entities.AcadPdfUnderlay import AcadPdfUnderlay
-from .Entities.AcadPlaneSurface import AcadPlaneSurface
-from .Entities.AcadPoint import AcadPoint
-from .Entities.AcadPointCloud import AcadPointCloud
-from .Entities.AcadPointCloudEx import AcadPointCloudEx
-from .Entities.AcadPolyfaceMesh import AcadPolyfaceMesh
-from .Entities.AcadPolygonMesh import AcadPolygonMesh
-from .Entities.AcadPolyline import AcadPolyline
-from .Entities.AcadPViewport import AcadPViewport
-from .Entities.AcadRasterImage import AcadRasterImage
-from .Entities.AcadRay import AcadRay
-from .Entities.AcadRegion import AcadRegion
-from .Entities.AcadSection import AcadSection
-from .Entities.AcadShape import AcadShape
-from .Entities.AcadSolid import AcadSolid
-from .Entities.AcadSpline import AcadSpline
-from .Entities.AcadSubDMesh import AcadSubDMesh
-from .Entities.AcadSurface import AcadSurface
-from .Entities.AcadSweptSurface import AcadSweptSurface
-from .Entities.AcadTable import AcadTable
-from .Entities.AcadText import AcadText
-from .Entities.AcadTolerance import AcadTolerance
-from .Entities.AcadTrace import AcadTrace
-from .Entities.AcadUnderlay import AcadUnderlay
-from .Entities.AcadWipeout import AcadWipeout
-from .Entities.AcadXline import AcadXline
+            ) from None
