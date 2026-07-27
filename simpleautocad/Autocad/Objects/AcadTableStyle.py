@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from ..Proxy import proxy_property, AccessMode
 from ..AcadObject import AcadObject
-from ..Objects.AcadAcCmColor import AcadAcCmColor
+from .AcadAcCmColor import AcadAcCmColor
 from ...Types.VarType import Variant
 from ...Types.Ac import (
     AcRowType,
