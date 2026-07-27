@@ -55,7 +55,7 @@ class AcadApplication(Application, AppObject):
         try:
             attached = AppAttach(prog_id)
             if attached is not None:
-                self._obj = attached
+                self._set_com_obj(attached)
                 self._is_owner = False
                 return
         except com_error:
@@ -63,7 +63,7 @@ class AcadApplication(Application, AppObject):
 
         # 2. Создаём новый экземпляр
         clsid = AcadApplication.__app_clsid__ or get_clsid(self)[0]
-        self._obj = create_new_instance_explicitly(clsid)
+        self._set_com_obj(create_new_instance_explicitly(clsid))
         self._is_owner = True
 
     ActiveDocument: AcadDocument = proxy_property('AcadDocument', 'ActiveDocument', AccessMode.ReadOnly)
@@ -87,8 +87,8 @@ class AcadApplication(Application, AppObject):
     WindowState: int = proxy_property(int, 'WindowState', AccessMode.ReadWrite)
     WindowTop: int = proxy_property(int, 'WindowTop', AccessMode.ReadWrite)
 
-    # Методы Application дополнительно защищены декоратором
-    # (базовый AppObject.__getattr__ тоже ретраит, это страховка)
+    # Явные методы: self._obj уже _RetryComProxy → retry автоматический.
+    # @retry_com оставлен как дополнительная страховка + reconnect на Application.
 
     @retry_com(max_attempts=5, base_delay=0.25)
     def StatusID(self, VportObj: AcadViewport) -> bool:

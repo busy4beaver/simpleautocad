@@ -58,91 +58,165 @@ def create_new_instance_explicitly(clsid):
         raise com_error(f"Ошибка COM при создании экземпляра приложения: {e}") from e
 
 
+def _unwrap_com(obj):
+    """Достаёт сырой CDispatch из AppObject / proxy."""
+    seen = set()
+    while id(obj) not in seen:
+        seen.add(id(obj))
+        if isinstance(obj, _RetryComProxy):
+            obj = object.__getattribute__(obj, '_com')
+            continue
+        if isinstance(obj, AppObject):
+            raw = object.__getattribute__(obj, '_raw_obj')
+            obj = raw
+            continue
+        if hasattr(obj, '_obj') and not isinstance(obj, CDispatch):
+            try:
+                inner = object.__getattribute__(obj, '_obj')
+            except Exception:
+                break
+            if inner is obj:
+                break
+            obj = inner
+            continue
+        break
+    return obj
+
+
+class _RetryComProxy:
+    """
+    Прозрачная обёртка над COM-объектом.
+
+    Любой доступ self._obj.Method(...) / self._obj.Prop проходит через
+    execute_com_call — включая явные методы вроде AcadEntity.TransformBy,
+    которые пишут self._obj.TransformBy(...) и не попадают в __getattr__.
+
+    После reconnect метод заново берётся с актуального _com.
+    """
+
+    __slots__ = ('_com', '_owner')
+
+    def __init__(self, com_obj, owner=None):
+        object.__setattr__(self, '_com', com_obj)
+        object.__setattr__(self, '_owner', owner)
+
+    def _reconnect_func(self):
+        owner = object.__getattribute__(self, '_owner')
+        if owner is None:
+            return None
+        fn = getattr(owner, '_reconnect_com', None)
+        return fn if callable(fn) else None
+
+    def __getattr__(self, name):
+        reconnect = self._reconnect_func()
+
+        # Свойства / поля — сразу с retry
+        def _get():
+            com = object.__getattribute__(self, '_com')
+            return getattr(com, name)
+
+        attr = execute_com_call(
+            _get,
+            reconnect_func=reconnect,
+            max_attempts=5,
+            base_delay=0.25,
+        )
+
+        if not callable(attr):
+            return attr
+
+        # Методы: при каждом вызове (и retry) берём метод с ТЕКУЩЕГО _com
+        def _wrapped(*args, **kwargs):
+            def _invoke():
+                com = object.__getattribute__(self, '_com')
+                method = getattr(com, name)
+                return method(*args, **kwargs)
+
+            return execute_com_call(
+                _invoke,
+                reconnect_func=self._reconnect_func(),
+                max_attempts=5,
+                base_delay=0.25,
+            )
+
+        return _wrapped
+
+    def __setattr__(self, name, value):
+        if name in ('_com', '_owner'):
+            object.__setattr__(self, name, value)
+            return
+
+        def _set():
+            com = object.__getattribute__(self, '_com')
+            setattr(com, name, value)
+
+        execute_com_call(
+            _set,
+            reconnect_func=self._reconnect_func(),
+            max_attempts=5,
+            base_delay=0.25,
+        )
+
+    def __call__(self):
+        return object.__getattribute__(self, '_com')
+
+    def __repr__(self):
+        return repr(object.__getattribute__(self, '_com'))
+
+    def __str__(self):
+        return str(object.__getattribute__(self, '_com'))
+
+    def __iter__(self):
+        com = object.__getattribute__(self, '_com')
+        return iter(com)
+
+    def __bool__(self):
+        return object.__getattribute__(self, '_com') is not None
+
+
 class AppObject:
     """
     Базовая обёртка над COM-объектом.
 
-    Все обращения к методам self._obj автоматически проходят через
-    retry (занятость сервера / кратковременные сбои).
-    Если у экземпляра есть _reconnect_com — он используется при disconnect.
+    self._obj — это _RetryComProxy: любой вызов self._obj.X() автоматически
+    ретраится при RPC_E_CALL_REJECTED и при disconnect (если есть _reconnect_com).
+    Декораторы на каждый метод не нужны.
     """
 
     def __init__(self, obj):
-        if not isinstance(obj, CDispatch):
-            obj = obj._obj
-        self._obj = obj
+        raw = _unwrap_com(obj)
+        object.__setattr__(self, '_raw_obj', raw)
+        object.__setattr__(self, '_obj', _RetryComProxy(raw, self))
+
+    def _set_com_obj(self, com_obj):
+        """Обновить COM-указатель (используется при reconnect)."""
+        raw = _unwrap_com(com_obj)
+        object.__setattr__(self, '_raw_obj', raw)
+        proxy = object.__getattribute__(self, '_obj')
+        if isinstance(proxy, _RetryComProxy):
+            object.__setattr__(proxy, '_com', raw)
+        else:
+            object.__setattr__(self, '_obj', _RetryComProxy(raw, self))
 
     def __repr__(self):
-        return repr(self._obj)
+        return repr(object.__getattribute__(self, '_raw_obj'))
 
     def __str__(self):
-        return f'{self._obj}'
+        return str(object.__getattribute__(self, '_raw_obj'))
 
     def __call__(self):
-        return self._obj
+        """Вернуть сырой COM-объект (для передачи в другие COM-вызовы)."""
+        return object.__getattribute__(self, '_raw_obj')
 
     def _com_reconnect(self):
-        """Возвращает callable для reconnect, если он есть."""
         fn = getattr(self, '_reconnect_com', None)
         return fn if callable(fn) else None
 
-    def _com_getattr(self, name: str):
-        return execute_com_call(
-            getattr,
-            self._obj,
-            name,
-            reconnect_func=self._com_reconnect(),
-            max_attempts=5,
-            base_delay=0.25,
-        )
-
-    def _com_setattr(self, name: str, value):
-        return execute_com_call(
-            setattr,
-            self._obj,
-            name,
-            value,
-            reconnect_func=self._com_reconnect(),
-            max_attempts=5,
-            base_delay=0.25,
-        )
-
-    def _com_call(self, method_name: str, *args, **kwargs):
-        method = self._com_getattr(method_name)
-        return execute_com_call(
-            method,
-            *args,
-            reconnect_func=self._com_reconnect(),
-            max_attempts=5,
-            base_delay=0.25,
-            **kwargs,
-        )
-
     def __getattr__(self, name):
-        # Не перехватывать служебные атрибуты
         if name.startswith('_'):
             raise AttributeError(name)
-
-        attr = self._com_getattr(name)
-
-        # Методы COM — оборачиваем в retry при каждом вызове
-        if callable(attr):
-            reconnect = self._com_reconnect()
-
-            @wraps(attr)
-            def _wrapped(*args, **kwargs):
-                return execute_com_call(
-                    attr,
-                    *args,
-                    reconnect_func=reconnect,
-                    max_attempts=5,
-                    base_delay=0.25,
-                    **kwargs,
-                )
-
-            return _wrapped
-
-        return attr
+        # Делегируем в proxy (уже с retry)
+        return getattr(object.__getattribute__(self, '_obj'), name)
 
 
 class Application(ABC):
