@@ -1,9 +1,11 @@
 from __future__ import annotations
-# from ..Base import *
+
 from ..Proxy import proxy_property, AccessMode
-from ..AcadObject import *
+from ..AcadObject import AcadObject
+
 
 class AcadRegisteredApplication(AcadObject):
-    def __init__(self, obj) -> None: super().__init__(obj)
+    def __init__(self, obj) -> None:
+        super().__init__(obj)
 
-    Name: str = proxy_property(str,'Name',AccessMode.ReadWrite)
+    Name = proxy_property(str, 'Name', AccessMode.ReadWrite)

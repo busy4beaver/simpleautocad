@@ -1,19 +1,20 @@
 from __future__ import annotations
-from ..Base import *
-from ..Proxy import *
-from ..AcadObject import *
 
+from ..Proxy import proxy_property, AccessMode
+from ..AcadObject import AcadObject
+from ...Types.VarType import Variant
 
 
 class AcadXRecord(AcadObject):
-    def __init__(self, obj) -> None: super().__init__(obj)
+    def __init__(self, obj) -> None:
+        super().__init__(obj)
 
-    Name: str = proxy_property(str,'Name',AccessMode.ReadWrite)
-    TranslateIDs: bool = proxy_property(bool,'TranslateIDs',AccessMode.ReadWrite)
+    Name = proxy_property(str, 'Name', AccessMode.ReadWrite)
+    TranslateIDs = proxy_property(bool, 'TranslateIDs', AccessMode.ReadWrite)
 
-    def GetXRecordData(self) -> tuple: 
+    def GetXRecordData(self) -> tuple:
         XRecordDataType, XRecordDataValue = self._obj.GetXRecordData()
         return XRecordDataType, XRecordDataValue
 
-    def SetXRecordData(self, XRecordDataType: Variant, XRecordData: Variant) -> None: 
+    def SetXRecordData(self, XRecordDataType: Variant, XRecordData: Variant) -> None:
         self._obj.SetXRecordData(XRecordDataType(), XRecordData())

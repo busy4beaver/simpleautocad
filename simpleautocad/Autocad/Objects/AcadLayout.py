@@ -1,12 +1,12 @@
 from __future__ import annotations
-from ..Base import *
-from ..Proxy import *
-from .AcadPlotConfiguration import *
 
+from ..Proxy import proxy_property, AccessMode
+from .AcadPlotConfiguration import AcadPlotConfiguration
 
 
 class AcadLayout(AcadPlotConfiguration):
-    def __init__(self, obj) -> None: super().__init__(obj)
+    def __init__(self, obj) -> None:
+        super().__init__(obj)
 
-    Block: AcadBlock = proxy_property('AcadBlock','Block',AccessMode.ReadOnly)
-    TabOrder: int = proxy_property(int,'TabOrder',AccessMode.ReadWrite)
+    Block = proxy_property('AcadBlock', 'Block', AccessMode.ReadOnly)
+    TabOrder = proxy_property(int, 'TabOrder', AccessMode.ReadWrite)

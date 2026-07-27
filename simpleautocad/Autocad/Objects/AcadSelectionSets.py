@@ -1,16 +1,16 @@
 from __future__ import annotations
-from ..Base import *
-from ..Proxy import *
-from ..AcadObject import *
-from .AcadSelectionSet import *
 
+from ..Base import AppObject
+from ..Proxy import proxy_property, AccessMode
+from .AcadSelectionSet import AcadSelectionSet
 
 
 class AcadSelectionSets(AppObject):
-    def __init__(self, obj) -> None: super().__init__(obj)
+    def __init__(self, obj) -> None:
+        super().__init__(obj)
 
-    Application: AcadApplication = proxy_property('AcadApplication','Application',AccessMode.ReadOnly)
-    Count: int = proxy_property(int,'Count',AccessMode.ReadOnly)
+    Application = proxy_property('AcadApplication', 'Application', AccessMode.ReadOnly)
+    Count = proxy_property(int, 'Count', AccessMode.ReadOnly)
 
     def Add(self, Name: str = None) -> AcadSelectionSet:
         return AcadSelectionSet(self._obj.Add(Name))
@@ -20,5 +20,4 @@ class AcadSelectionSets(AppObject):
 
     def __iter__(self):
         for item in self._obj:
-            obj = AcadSelectionSet(item)
-            yield obj
+            yield AcadSelectionSet(item)

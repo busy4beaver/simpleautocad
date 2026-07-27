@@ -1,14 +1,14 @@
 from __future__ import annotations
-from ..Base import *
-from ..Proxy import *
-from ..AcadObject import *
 
+from ..AcadObject import IAcadObjectCollection
+from .AcadView import AcadView
 
 
 class AcadViews(IAcadObjectCollection):
-    def __init__(self, obj) -> None: super().__init__(obj)
+    def __init__(self, obj) -> None:
+        super().__init__(obj)
 
-    def Add(self, Name: str) -> AcadView: 
+    def Add(self, Name: str) -> AcadView:
         return AcadView(self._obj.Add(Name))
 
     def Item(self, Index: int | str) -> AcadView:
@@ -16,5 +16,4 @@ class AcadViews(IAcadObjectCollection):
 
     def __iter__(self):
         for item in self._obj:
-            obj = AcadView(item)
-            yield obj
+            yield AcadView(item)
