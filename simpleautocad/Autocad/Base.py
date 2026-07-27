@@ -58,8 +58,25 @@ def create_new_instance_explicitly(clsid):
         raise com_error(f"Ошибка COM при создании экземпляра приложения: {e}") from e
 
 
+def _is_com_dispatch(obj) -> bool:
+    """CDispatch и похожие COM-обёртки win32com (у них часто callable == True)."""
+    if isinstance(obj, CDispatch):
+        return True
+    # dynamic.CDispatch / другие обёртки
+    try:
+        from win32com.client import DispatchBaseClass
+        if isinstance(obj, DispatchBaseClass):
+            return True
+    except Exception:
+        pass
+    # У сырого IDispatch часто есть _oleobj_
+    if hasattr(obj, '_oleobj_') and not isinstance(obj, type):
+        return True
+    return False
+
+
 def _unwrap_com(obj):
-    """Достаёт сырой CDispatch из AppObject / proxy."""
+    """Достаёт сырой COM-dispatch из AppObject / proxy."""
     seen = set()
     while id(obj) not in seen:
         seen.add(id(obj))
@@ -67,10 +84,9 @@ def _unwrap_com(obj):
             obj = object.__getattribute__(obj, '_com')
             continue
         if isinstance(obj, AppObject):
-            raw = object.__getattribute__(obj, '_raw_obj')
-            obj = raw
+            obj = object.__getattribute__(obj, '_raw_obj')
             continue
-        if hasattr(obj, '_obj') and not isinstance(obj, CDispatch):
+        if hasattr(obj, '_obj') and not _is_com_dispatch(obj):
             try:
                 inner = object.__getattribute__(obj, '_obj')
             except Exception:
@@ -87,11 +103,16 @@ class _RetryComProxy:
     """
     Прозрачная обёртка над COM-объектом.
 
-    Любой доступ self._obj.Method(...) / self._obj.Prop проходит через
-    execute_com_call — включая явные методы вроде AcadEntity.TransformBy,
-    которые пишут self._obj.TransformBy(...) и не попадают в __getattr__.
+    Цепочки вида:
+        app._obj.ActiveDocument.ModelSpace.AddLine(...)
+    работают так:
+      - свойства, возвращающие COM (ActiveDocument, ModelSpace) →
+        новый _RetryComProxy (чтобы цепочка не теряла retry);
+      - методы (AddLine, TransformBy) → вызов через execute_com_call;
+      - обычные значения (str, int, …) → как есть.
 
-    После reconnect метод заново берётся с актуального _com.
+    Важно: CDispatch в win32com часто callable, поэтому нельзя
+    решать «метод это или свойство» только через callable().
     """
 
     __slots__ = ('_com', '_owner')
@@ -107,10 +128,17 @@ class _RetryComProxy:
         fn = getattr(owner, '_reconnect_com', None)
         return fn if callable(fn) else None
 
+    def _wrap_result(self, result):
+        """Если результат — COM-объект, оборачиваем для продолжения цепочки."""
+        if result is None or isinstance(result, _RetryComProxy):
+            return result
+        if _is_com_dispatch(result):
+            return _RetryComProxy(result, object.__getattribute__(self, '_owner'))
+        return result
+
     def __getattr__(self, name):
         reconnect = self._reconnect_func()
 
-        # Свойства / поля — сразу с retry
         def _get():
             com = object.__getattribute__(self, '_com')
             return getattr(com, name)
@@ -122,22 +150,28 @@ class _RetryComProxy:
             base_delay=0.25,
         )
 
+        # Свойство вернуло COM-объект (ActiveDocument, ModelSpace, …)
+        if _is_com_dispatch(attr):
+            return _RetryComProxy(attr, object.__getattribute__(self, '_owner'))
+
+        # Обычное значение (числа, строки, кортежи, …)
         if not callable(attr):
             return attr
 
-        # Методы: при каждом вызове (и retry) берём метод с ТЕКУЩЕГО _com
+        # Настоящий метод COM — при вызове ретраим и заново берём с актуального _com
         def _wrapped(*args, **kwargs):
             def _invoke():
                 com = object.__getattribute__(self, '_com')
                 method = getattr(com, name)
                 return method(*args, **kwargs)
 
-            return execute_com_call(
+            result = execute_com_call(
                 _invoke,
                 reconnect_func=self._reconnect_func(),
                 max_attempts=5,
                 base_delay=0.25,
             )
+            return self._wrap_result(result)
 
         return _wrapped
 
@@ -178,8 +212,8 @@ class AppObject:
     """
     Базовая обёртка над COM-объектом.
 
-    self._obj — это _RetryComProxy: любой вызов self._obj.X() автоматически
-    ретраится при RPC_E_CALL_REJECTED и при disconnect (если есть _reconnect_com).
+    self._obj — _RetryComProxy: любой вызов self._obj.X() и цепочки
+    self._obj.A.B.Method() автоматически ретраятся при занятости сервера.
     Декораторы на каждый метод не нужны.
     """
 
@@ -215,7 +249,6 @@ class AppObject:
     def __getattr__(self, name):
         if name.startswith('_'):
             raise AttributeError(name)
-        # Делегируем в proxy (уже с retry)
         return getattr(object.__getattribute__(self, '_obj'), name)
 
 
