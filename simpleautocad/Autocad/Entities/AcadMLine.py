@@ -1,17 +1,17 @@
 from __future__ import annotations
-from ..Base import *
-from ..Proxy import *
+
+from ..Proxy import proxy_property, AccessMode
 from ..AcadEntity import AcadEntity
 
 
-
 class AcadMLine(AcadEntity):
-    def __init__(self, obj) -> None: super().__init__(obj)
+    def __init__(self, obj) -> None:
+        super().__init__(obj)
 
-    Coordinates: PyGePoint3d = proxy_property('PyGePoint3d','Coordinates',AccessMode.ReadWrite)
-    Justification: AcMLineJustification = proxy_property('AcMLineJustification','Justification',AccessMode.ReadWrite)
-    MLineScale: float = proxy_property(float,'MLineScale',AccessMode.ReadWrite)
-    StyleName: str = proxy_property(str,'StyleName',AccessMode.ReadOnly)
+    Coordinates = proxy_property('PyGePoint3d', 'Coordinates', AccessMode.ReadWrite)
+    Justification = proxy_property('AcMLineJustification', 'Justification', AccessMode.ReadWrite)
+    MLineScale = proxy_property(float, 'MLineScale', AccessMode.ReadWrite)
+    StyleName = proxy_property(str, 'StyleName', AccessMode.ReadOnly)
 
-    def Copy(self) -> AcadMtext:
-        return AcadMtext(self._obj.Copy())
+    def Copy(self) -> AcadMLine:
+        return AcadMLine(self._obj.Copy())
