@@ -9,56 +9,53 @@ from ...Types.Ge import (
     PyGeVector3d,
 )
 from ...Types.VarType import (
+    vDoubleArray,
+    vObjectArray,
+    vShortArray,
     Variant,
     vObjectEmpty,
-    vObjectArray,
-    vDoubleArray,
-    vShortArray,
 )
-from ...Types.Ac import AcAttributeMode, AcLeaderType
-from ..Entities import (
-    Acad3DFace,
-    Acad3DPolyline,
-    Acad3DSolid,
-    AcadArc,
-    AcadAttribute,
-    AcadBlockReference,
-    AcadCircle,
-    AcadDim3PointAngular,
-    AcadDimAligned,
-    AcadDimArcLength,
-    AcadDimDiametric,
-    AcadDimOrdinate,
-    AcadDimRadial,
-    AcadDimRadialLarge,
-    AcadDimRotated,
-    AcadEllipse,
-    AcadExternalReference,
-    AcadHatch,
-    AcadLeader,
-    AcadLine,
-    AcadLWPolyline,
-    AcadMInsertBlock,
-    AcadMLeader,
-    AcadMLine,
-    AcadMtext,
-    AcadPoint,
-    AcadPolyfaceMesh,
-    AcadPolygonMesh,
-    AcadPolyline,
-    AcadRasterImage,
-    AcadRay,
-    AcadRegion,
-    AcadSection,
-    AcadShape,
-    AcadSolid,
-    AcadSpline,
-    AcadTable,
-    AcadText,
-    AcadTolerance,
-    AcadTrace,
-    AcadXline,
-)
+from ..Entities.Acad3DFace import Acad3DFace
+from ..Entities.Acad3DPolyline import Acad3DPolyline
+from ..Entities.Acad3DSolid import Acad3DSolid
+from ..Entities.AcadArc import AcadArc
+from ..Entities.AcadAttribute import AcadAttribute
+from ..Entities.AcadBlockReference import AcadBlockReference
+from ..Entities.AcadCircle import AcadCircle
+from ..Entities.AcadDim3PointAngular import AcadDim3PointAngular
+from ..Entities.AcadDimAligned import AcadDimAligned
+from ..Entities.AcadDimArcLength import AcadDimArcLength
+from ..Entities.AcadDimDiametric import AcadDimDiametric
+from ..Entities.AcadDimOrdinate import AcadDimOrdinate
+from ..Entities.AcadDimRadial import AcadDimRadial
+from ..Entities.AcadDimRadialLarge import AcadDimRadialLarge
+from ..Entities.AcadDimRotated import AcadDimRotated
+from ..Entities.AcadEllipse import AcadEllipse
+from ..Entities.AcadExternalReference import AcadExternalReference
+from ..Entities.AcadHatch import AcadHatch
+from ..Entities.AcadLeader import AcadLeader
+from ..Entities.AcadLine import AcadLine
+from ..Entities.AcadLWPolyline import AcadLWPolyline
+from ..Entities.AcadMInsertBlock import AcadMInsertBlock
+from ..Entities.AcadMLeader import AcadMLeader
+from ..Entities.AcadMLine import AcadMLine
+from ..Entities.AcadMtext import AcadMtext
+from ..Entities.AcadPoint import AcadPoint
+from ..Entities.AcadPolyfaceMesh import AcadPolyfaceMesh
+from ..Entities.AcadPolygonMesh import AcadPolygonMesh
+from ..Entities.AcadPolyline import AcadPolyline
+from ..Entities.AcadRasterImage import AcadRasterImage
+from ..Entities.AcadRay import AcadRay
+from ..Entities.AcadRegion import AcadRegion
+from ..Entities.AcadSection import AcadSection
+from ..Entities.AcadShape import AcadShape
+from ..Entities.AcadSolid import AcadSolid
+from ..Entities.AcadSpline import AcadSpline
+from ..Entities.AcadTable import AcadTable
+from ..Entities.AcadText import AcadText
+from ..Entities.AcadTolerance import AcadTolerance
+from ..Entities.AcadTrace import AcadTrace
+from ..Entities.AcadXline import AcadXline
 
 
 class IAcadBlock(IAcadObjectCollection):
@@ -88,15 +85,16 @@ class IAcadBlock(IAcadObjectCollection):
     def AddAttribute(
         self,
         Height: float,
-        Mode: AcAttributeMode,
+        Mode,
         Prompt: str,
         InsertionPoint: PyGePoint3d,
         Tag: str,
         Value: str,
     ) -> AcadAttribute:
+        mode_val = Mode.value if hasattr(Mode, 'value') else Mode
         return AcadAttribute(
             self._obj.AddAttribute(
-                Height, Mode.value, Prompt, InsertionPoint(), Tag, Value
+                Height, mode_val, Prompt, InsertionPoint(), Tag, Value
             )
         )
 
@@ -152,7 +150,9 @@ class IAcadBlock(IAcadObjectCollection):
         ArcPoint: PyGePoint3d,
     ) -> AcadDimArcLength:
         return AcadDimArcLength(
-            self._obj.AddDimArc(ArcCenter(), FirstEndPoint(), SecondEndPoint(), ArcPoint())
+            self._obj.AddDimArc(
+                ArcCenter(), FirstEndPoint(), SecondEndPoint(), ArcPoint()
+            )
         )
 
     def AddDimDiametric(
@@ -163,7 +163,10 @@ class IAcadBlock(IAcadObjectCollection):
         )
 
     def AddDimOrdinate(
-        self, DefinitionPoint: PyGePoint3d, LeaderEndPoint: PyGePoint3d, UseXAxis: bool
+        self,
+        DefinitionPoint: PyGePoint3d,
+        LeaderEndPoint: PyGePoint3d,
+        UseXAxis: bool,
     ) -> AcadDimOrdinate:
         return AcadDimOrdinate(
             self._obj.AddDimOrdinate(DefinitionPoint, LeaderEndPoint, UseXAxis)
@@ -227,7 +230,9 @@ class IAcadBlock(IAcadObjectCollection):
         Height: float,
     ) -> Acad3DSolid:
         return Acad3DSolid(
-            self._obj.AddEllipticalCylinder(Center(), MajorRadius, MinorRadius, Height)
+            self._obj.AddEllipticalCylinder(
+                Center(), MajorRadius, MinorRadius, Height
+            )
         )
 
     def AddExtrudedSolid(
@@ -246,15 +251,17 @@ class IAcadBlock(IAcadObjectCollection):
         HatchObjectType=None,
     ) -> AcadHatch:
         return AcadHatch(
-            self._obj.AddHatch(PatternType, PatternName, Associativity, HatchObjectType)
+            self._obj.AddHatch(
+                PatternType, PatternName, Associativity, HatchObjectType
+            )
         )
 
-    def AddLeader(
-        self, PointsArray: PyGePoint3d, Annotation, Type: AcLeaderType
-    ) -> AcadLeader:
+    def AddLeader(self, PointsArray: PyGePoint3d, Annotation, Type) -> AcadLeader:
         return AcadLeader(self._obj.AddLeader(PointsArray(), Annotation, Type))
 
-    def AddLightWeightPolyline(self, VerticesList: PyGePoint2dArray) -> AcadLWPolyline:
+    def AddLightWeightPolyline(
+        self, VerticesList: PyGePoint2dArray
+    ) -> AcadLWPolyline:
         return AcadLWPolyline(self._obj.AddLightWeightPolyline(VerticesList()))
 
     def AddLine(self, StartPoint: PyGePoint3d, EndPoint: PyGePoint3d) -> AcadLine:
@@ -347,7 +354,10 @@ class IAcadBlock(IAcadObjectCollection):
         )
 
     def AddSection(
-        self, FromPoint: PyGePoint3d, ToPoint: PyGePoint3d, planeVector: PyGeVector3d
+        self,
+        FromPoint: PyGePoint3d,
+        ToPoint: PyGePoint3d,
+        planeVector: PyGeVector3d,
     ) -> AcadSection:
         return AcadSection(
             self._obj.AddSection(FromPoint(), ToPoint(), planeVector())
