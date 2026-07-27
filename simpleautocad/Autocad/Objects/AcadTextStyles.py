@@ -1,11 +1,12 @@
 from __future__ import annotations
-from ..Base import *
-from ..AcadObject import *
-from .AcadTextStyle import *
+
+from ..AcadObject import IAcadObjectCollection
+from .AcadTextStyle import AcadTextStyle
 
 
 class AcadTextStyles(IAcadObjectCollection):
-    def __init__(self, obj) -> None: super().__init__(obj)
+    def __init__(self, obj) -> None:
+        super().__init__(obj)
 
     def Add(self, Name: str = None) -> AcadTextStyle:
         return AcadTextStyle(self._obj.Add(Name))
@@ -15,5 +16,4 @@ class AcadTextStyles(IAcadObjectCollection):
 
     def __iter__(self):
         for item in self._obj:
-            obj = AcadTextStyle(item)
-            yield obj
+            yield AcadTextStyle(item)
