@@ -31,7 +31,8 @@ class AcadHatch(AcadEntity):
     PatternType: AcPatternType = proxy_property(AcPatternType,'PatternType',AccessMode.ReadOnly)
 
     def AppendInnerLoop(self, Loop: vObjectArray[AcadArc|AcadCircle|AcadEllipse|AcadLine|AcadPolyline|AcadRegion|AcadSpline]) -> None:
-        self._obj.AppendInnerLoop(Loop())
+        # Loop без (): proxy сам развернёт AppObject → dispatch и соберёт VARIANT
+        self._obj.AppendInnerLoop(Loop)
 
     def AppendOuterLoop(self, Loop: vObjectArray[AcadArc|AcadCircle|AcadEllipse|AcadLine|AcadPolyline|AcadRegion|AcadSpline]) -> None:
-        self._obj.AppendOuterLoop(Loop())
+        self._obj.AppendOuterLoop(Loop)

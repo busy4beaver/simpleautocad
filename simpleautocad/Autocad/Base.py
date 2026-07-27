@@ -1,4 +1,4 @@
-from win32com.client import GetActiveObject as AppAttach, Dispatch as AppCreate, CDispatch
+from win32com.client import GetActiveObject as AppAttach, Dispatch as AppCreate, CDispatch, VARIANT as WinVARIANT
 from winreg import CloseKey, OpenKey, QueryValueEx, HKEY_CLASSES_ROOT
 from pythoncom import CoInitialize, CoUninitialize, CoCreateInstance, CLSCTX_LOCAL_SERVER, IID_IDispatch, com_error
 from abc import ABC, abstractmethod
@@ -102,8 +102,9 @@ def _prepare_com_arg(value):
     Готовит аргумент к передаче в COM.
 
     AppObject / _RetryComProxy → сырой dispatch
-    Variant / vObjectArray / … → VARIANT (с развёрткой вложенных объектов)
-    PyGe* → результат __call__() (tuple / array для COM)
+    наш Variant / vObjectArray → VARIANT (с развёрткой вложенных объектов)
+    win32com VARIANT (уже собранный, напр. Loop()) → пересборка с чистыми элементами
+    PyGe* → результат __call__()
     list/tuple → рекурсивно
     """
     if value is None or isinstance(value, (bool, int, float, str, bytes)):
@@ -115,7 +116,16 @@ def _prepare_com_arg(value):
     if isinstance(value, AppObject):
         return object.__getattribute__(value, '_raw_obj')
 
-    # Variant и наследники (vObjectArray, vDoubleArray, …)
+    # Уже собранный win32com.client.VARIANT (типично после Loop() в явном методе)
+    if isinstance(value, WinVARIANT) or type(value).__name__ == 'VARIANT':
+        try:
+            vt = value.varianttype
+            cleaned = _prepare_com_arg(value.value)
+            return WinVARIANT(vt, cleaned)
+        except Exception:
+            return value
+
+    # Наш Variant и наследники (vObjectArray, vDoubleArray, …)
     if hasattr(value, 'to_variant') and hasattr(value, '_value_py'):
         py = value._value_py
         if isinstance(py, list):
@@ -149,16 +159,6 @@ class _RetryComProxy:
     """
     Прозрачная обёртка над COM-объектом.
 
-    Цепочки вида:
-        app._obj.ActiveDocument.ModelSpace.AddLine(...)
-    работают так:
-      - свойства, возвращающие COM (ActiveDocument, ModelSpace) →
-        новый _RetryComProxy (чтобы цепочка не теряла retry);
-      - методы (AddLine, TransformBy) → вызов через execute_com_call;
-      - обычные значения (str, int, …) → как есть.
-
-    Важно: CDispatch в win32com часто callable, поэтому нельзя
-    решать «метод это или свойство» только через callable().
     Перед вызовом метода аргументы проходят _prepare_com_arg.
     """
 
@@ -176,7 +176,6 @@ class _RetryComProxy:
         return fn if callable(fn) else None
 
     def _wrap_result(self, result):
-        """Если результат — COM-объект, оборачиваем для продолжения цепочки."""
         if result is None or isinstance(result, _RetryComProxy):
             return result
         if _is_com_dispatch(result):
@@ -197,15 +196,12 @@ class _RetryComProxy:
             base_delay=0.25,
         )
 
-        # Свойство вернуло COM-объект (ActiveDocument, ModelSpace, …)
         if _is_com_dispatch(attr):
             return _RetryComProxy(attr, object.__getattribute__(self, '_owner'))
 
-        # Обычное значение (числа, строки, кортежи, …)
         if not callable(attr):
             return attr
 
-        # Настоящий метод COM — unwrap args, retry, свежий _com
         def _wrapped(*args, **kwargs):
             cargs, ckwargs = _prepare_com_args(args, kwargs)
 
@@ -263,9 +259,8 @@ class AppObject:
     """
     Базовая обёртка над COM-объектом.
 
-    self._obj — _RetryComProxy: любой вызов self._obj.X() и цепочки
-    self._obj.A.B.Method() автоматически ретраятся при занятости сервера.
-    Декораторы на каждый метод не нужны.
+    self._obj — _RetryComProxy: любой вызов self._obj.X() автоматически
+    ретраится; аргументы разворачиваются в COM-совместимые значения.
     """
 
     def __init__(self, obj):
