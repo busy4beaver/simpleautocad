@@ -4,7 +4,7 @@
 Она предоставляет интуитивно понятный объектно-ориентированный интерфейс к объектной модели AutoCAD, позволяя создавать, редактировать и управлять 2D‑ и 3D‑чертежами непосредственно из Python-скриптов.
 
 [![Tag](https://img.shields.io/github/v/tag/busy4beaver/simpleautocad?color=00c2e8)](https://pypi.org/project/simpleautocad/)
-[![Supported Python versions](https://img.shields.io/pypi/pyversions/simpleautocad.svg?logo=python&logoColor=FFE873)](https://www.python.org/downloads/)
+[![Supported Python versions](https://img.shields.io/badge/python-3.8%2B-blue?logo=python&logoColor=FFE873)](https://www.python.org/downloads/)
 [![Licence](https://img.shields.io/github/license/busy4beaver/simpleautocad.svg)](LICENSE) 
 
 ---
