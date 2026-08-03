@@ -2,6 +2,13 @@ from __future__ import annotations
 
 from ..Proxy import proxy_property, AccessMode
 from ..AcadEntity import AcadEntity
+from ...Types.Ge import PyGePoint3d, PyGeVector3d
+from ...Types.Ac import (
+    AcAlignment,
+    AcAttributeMode,
+    AcDrawingDirection,
+    AcTextGenerationFlag,
+)
 
 
 class AcadAttribute(AcadEntity):
