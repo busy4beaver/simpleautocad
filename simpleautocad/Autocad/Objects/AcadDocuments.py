@@ -1,8 +1,14 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from ..Base import AppObject, AppObjectCollection
 from ..Proxy import proxy_property, AccessMode
 from .AcadDocument import AcadDocument
+
+if TYPE_CHECKING:
+    from .AcadApplication import AcadApplication
+    from ...Types.VarType import vBool, vPassword
 
 
 class AcadDocuments(AppObjectCollection):
