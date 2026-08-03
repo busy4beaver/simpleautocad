@@ -1,8 +1,12 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from ..Proxy import proxy_property, AccessMode
 from ..AcadEntity import AcadEntity
-from ...Types.Ge import PyGePoint3d
+from ..Base import AppObject
+from ...Types.Ge import PyGePoint3d, PyGePoint3dArray, PyGeVector3d
+from ...Types.Ac import AcDimArrowheadType, AcColor, AcLineWeight, AcLeaderType
 
 
 class AcadLeader(AcadEntity):

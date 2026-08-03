@@ -3,6 +3,7 @@ from __future__ import annotations
 from ..Proxy import proxy_property, AccessMode
 from ..AcadObject import AcadObject
 from ...Types.VarType import vDoubleArray
+from ...Types.Ge import PyGePoint2d, PyGePoint3d, PyGeVector3d
 from .AcadView import AcadView
 
 
