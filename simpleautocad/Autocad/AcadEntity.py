@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from .Base import AppObject
 from .Proxy import proxy_property, AccessMode
 from .AcadObject import AcadObject
@@ -7,21 +9,25 @@ from ..Types.Ac import AcExtendOption, AcLineWeight, AcColor
 from ..Types.Ge import PyGePoint3d, PyGePoint3dArray, PyGeMatrix3d
 from ..Types.VarType import vObjectArray
 
+if TYPE_CHECKING:
+    from .Objects.AcadHyperlinks import AcadHyperlinks
+    from .Objects.AcadAcCmColor import AcadAcCmColor
+
 
 class AcadEntity(AcadObject):
     def __init__(self, obj) -> None:
         super().__init__(obj)
 
-    EntityTransparency = proxy_property(str, 'EntityTransparency', AccessMode.ReadWrite)
-    Hyperlinks = proxy_property('AcadHyperlinks', 'Hyperlinks', AccessMode.ReadOnly)
-    Layer = proxy_property(str, 'Layer', AccessMode.ReadWrite)
-    Linetype = proxy_property(str, 'Linetype', AccessMode.ReadWrite)
-    LinetypeScale = proxy_property(float, 'LinetypeScale', AccessMode.ReadWrite)
-    Lineweight = proxy_property('AcLineWeight', 'Lineweight', AccessMode.ReadWrite)
-    Material = proxy_property(str, 'Material', AccessMode.ReadWrite)
-    PlotStyleName = proxy_property(str, 'PlotStyleName', AccessMode.ReadWrite)
-    TrueColor = proxy_property('AcadAcCmColor', 'TrueColor', AccessMode.ReadWrite)
-    Visible = proxy_property(bool, 'Visible', AccessMode.ReadWrite)
+    EntityTransparency: str = proxy_property(str, 'EntityTransparency', AccessMode.ReadWrite)
+    Hyperlinks: AcadHyperlinks = proxy_property('AcadHyperlinks', 'Hyperlinks', AccessMode.ReadOnly)
+    Layer: str = proxy_property(str, 'Layer', AccessMode.ReadWrite)
+    Linetype: str = proxy_property(str, 'Linetype', AccessMode.ReadWrite)
+    LinetypeScale: float = proxy_property(float, 'LinetypeScale', AccessMode.ReadWrite)
+    Lineweight: AcLineWeight = proxy_property('AcLineWeight', 'Lineweight', AccessMode.ReadWrite)
+    Material: str = proxy_property(str, 'Material', AccessMode.ReadWrite)
+    PlotStyleName: str = proxy_property(str, 'PlotStyleName', AccessMode.ReadWrite)
+    TrueColor: AcadAcCmColor = proxy_property('AcadAcCmColor', 'TrueColor', AccessMode.ReadWrite)
+    Visible: bool = proxy_property(bool, 'Visible', AccessMode.ReadWrite)
 
     def ArrayPolar(self, NumberOfObjects: int, AngleToFill: float, CenterPoint: PyGePoint3d):
         return self._obj.ArrayPolar(NumberOfObjects, AngleToFill, CenterPoint())
@@ -85,11 +91,11 @@ class AcadSubEntity(AppObject):
     def __init__(self, obj) -> None:
         super().__init__(obj)
 
-    Color = proxy_property('AcColor', 'Color', AccessMode.ReadWrite)
-    Hyperlinks = proxy_property('AcadHyperlinks', 'Hyperlinks', AccessMode.ReadOnly)
-    Layer = proxy_property(str, 'Layer', AccessMode.ReadWrite)
-    Linetype = proxy_property(str, 'Linetype', AccessMode.ReadWrite)
-    LinetypeScale = proxy_property(float, 'LinetypeScale', AccessMode.ReadWrite)
-    Lineweight = proxy_property('AcLineWeight', 'Lineweight', AccessMode.ReadWrite)
-    ObjectName = proxy_property(str, 'ObjectName', AccessMode.ReadOnly)
-    PlotStyleName = proxy_property(str, 'PlotStyleName', AccessMode.ReadWrite)
+    Color: AcColor = proxy_property('AcColor', 'Color', AccessMode.ReadWrite)
+    Hyperlinks: AcadHyperlinks = proxy_property('AcadHyperlinks', 'Hyperlinks', AccessMode.ReadOnly)
+    Layer: str = proxy_property(str, 'Layer', AccessMode.ReadWrite)
+    Linetype: str = proxy_property(str, 'Linetype', AccessMode.ReadWrite)
+    LinetypeScale: float = proxy_property(float, 'LinetypeScale', AccessMode.ReadWrite)
+    Lineweight: AcLineWeight = proxy_property('AcLineWeight', 'Lineweight', AccessMode.ReadWrite)
+    ObjectName: str = proxy_property(str, 'ObjectName', AccessMode.ReadOnly)
+    PlotStyleName: str = proxy_property(str, 'PlotStyleName', AccessMode.ReadWrite)

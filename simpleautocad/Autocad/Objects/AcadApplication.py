@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from win32com.client import CDispatch
 from pythoncom import com_error
 
@@ -17,6 +19,13 @@ from ...Utils.retry_com import retry_com
 from ...Types.Ge import PyGePoint3d
 from ...Types.VarType import vStringArray
 from .AcadState import AcadState
+
+if TYPE_CHECKING:
+    from .AcadDocument import AcadDocument
+    from .AcadDocuments import AcadDocuments
+    from .AcadMenuBar import AcadMenuBar
+    from .AcadMenuGroups import AcadMenuGroups
+    from .AcadPreferences import AcadPreferences
 
 
 class AcadApplication(Application, AppObject):
@@ -76,26 +85,26 @@ class AcadApplication(Application, AppObject):
         self._set_com_obj(create_new_instance_explicitly(clsid))
         self._is_owner = True
 
-    ActiveDocument = proxy_property('AcadDocument', 'ActiveDocument', AccessMode.ReadOnly)
-    Application = proxy_property('AcadApplication', 'Application', AccessMode.ReadOnly)
-    Caption = proxy_property(str, 'Caption', AccessMode.ReadOnly)
-    Documents = proxy_property('AcadDocuments', 'Documents', AccessMode.ReadOnly)
-    FullName = proxy_property(str, 'FullName', AccessMode.ReadOnly)
-    Height = proxy_property(float, 'Height', AccessMode.ReadWrite)
-    HWND = proxy_property(int, 'HWND', AccessMode.ReadOnly)
-    LocaleId = proxy_property(int, 'LocaleId', AccessMode.ReadOnly)
-    MenuBar = proxy_property('AcadMenuBar', 'MenuBar', AccessMode.ReadOnly)
-    MenuGroups = proxy_property('AcadMenuGroups', 'MenuGroups', AccessMode.ReadOnly)
-    Name = proxy_property(str, 'Name', AccessMode.ReadOnly)
-    Path = proxy_property(str, 'Path', AccessMode.ReadOnly)
-    Preferences = proxy_property('AcadPreferences', 'Preferences', AccessMode.ReadOnly)
-    VBE = proxy_property('AppObject', 'VBE', AccessMode.ReadOnly)
-    Version = proxy_property(str, 'Version', AccessMode.ReadOnly)
-    Visible = proxy_property(bool, 'Visible', AccessMode.ReadWrite)
-    Width = proxy_property(float, 'Width', AccessMode.ReadWrite)
-    WindowLeft = proxy_property(int, 'WindowLeft', AccessMode.ReadWrite)
-    WindowState = proxy_property(int, 'WindowState', AccessMode.ReadWrite)
-    WindowTop = proxy_property(int, 'WindowTop', AccessMode.ReadWrite)
+    ActiveDocument: AcadDocument = proxy_property('AcadDocument', 'ActiveDocument', AccessMode.ReadOnly)
+    Application: AcadApplication = proxy_property('AcadApplication', 'Application', AccessMode.ReadOnly)
+    Caption: str = proxy_property(str, 'Caption', AccessMode.ReadOnly)
+    Documents: AcadDocuments = proxy_property('AcadDocuments', 'Documents', AccessMode.ReadOnly)
+    FullName: str = proxy_property(str, 'FullName', AccessMode.ReadOnly)
+    Height: float = proxy_property(float, 'Height', AccessMode.ReadWrite)
+    HWND: int = proxy_property(int, 'HWND', AccessMode.ReadOnly)
+    LocaleId: int = proxy_property(int, 'LocaleId', AccessMode.ReadOnly)
+    MenuBar: AcadMenuBar = proxy_property('AcadMenuBar', 'MenuBar', AccessMode.ReadOnly)
+    MenuGroups: AcadMenuGroups = proxy_property('AcadMenuGroups', 'MenuGroups', AccessMode.ReadOnly)
+    Name: str = proxy_property(str, 'Name', AccessMode.ReadOnly)
+    Path: str = proxy_property(str, 'Path', AccessMode.ReadOnly)
+    Preferences: AcadPreferences = proxy_property('AcadPreferences', 'Preferences', AccessMode.ReadOnly)
+    VBE: AppObject = proxy_property('AppObject', 'VBE', AccessMode.ReadOnly)
+    Version: str = proxy_property(str, 'Version', AccessMode.ReadOnly)
+    Visible: bool = proxy_property(bool, 'Visible', AccessMode.ReadWrite)
+    Width: float = proxy_property(float, 'Width', AccessMode.ReadWrite)
+    WindowLeft: int = proxy_property(int, 'WindowLeft', AccessMode.ReadWrite)
+    WindowState: int = proxy_property(int, 'WindowState', AccessMode.ReadWrite)
+    WindowTop: int = proxy_property(int, 'WindowTop', AccessMode.ReadWrite)
 
     @retry_com(max_attempts=5, base_delay=0.25)
     def StatusID(self, VportObj) -> bool:

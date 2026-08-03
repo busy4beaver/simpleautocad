@@ -8,7 +8,4 @@ class AcadDimStyle(AcadObject):
     def __init__(self, obj) -> None:
         super().__init__(obj)
 
-    Name = proxy_property(str, 'Name', AccessMode.ReadWrite)
-
-    def CopyFrom(self, SourceObject) -> None:
-        self._obj.CopyFrom(SourceObject)
+    Name: str = proxy_property(str, 'Name', AccessMode.ReadWrite)

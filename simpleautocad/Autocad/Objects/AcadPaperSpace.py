@@ -1,16 +1,18 @@
 from __future__ import annotations
 
-from ..Proxy import proxy_property, AccessMode
+from typing import TYPE_CHECKING
+
+from .AcadBlock import AcadBlock
 from ...Types.Ge import PyGePoint3d
-from .AcadBlock import IAcadBlock
+
+if TYPE_CHECKING:
+    from ..Entities.AcadPViewport import AcadPViewport
 
 
-class AcadPaperSpace(IAcadBlock):
+class AcadPaperSpace(AcadBlock):
     def __init__(self, obj) -> None:
         super().__init__(obj)
 
-    Name = proxy_property(str, 'Name', AccessMode.ReadOnly)
-
-    def AddPViewport(self, Center: PyGePoint3d, Width: float, Height: float):
+    def AddPViewport(self, Center: PyGePoint3d, Width: float, Height: float) -> AcadPViewport:
         from ..Entities.AcadPViewport import AcadPViewport
         return AcadPViewport(self._obj.AddPViewport(Center(), Width, Height))

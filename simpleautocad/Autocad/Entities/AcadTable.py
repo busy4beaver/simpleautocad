@@ -33,33 +33,33 @@ class AcadTable(AcadEntity):
     def __init__(self, obj) -> None:
         super().__init__(obj)
 
-    AllowManualHeights = proxy_property(bool, 'AllowManualHeights', AccessMode.ReadWrite)
-    AllowManualPositions = proxy_property(bool, 'AllowManualPositions', AccessMode.ReadWrite)
-    BreaksEnabled = proxy_property(bool, 'BreaksEnabled', AccessMode.ReadWrite)
-    BreakSpacing = proxy_property(float, 'BreakSpacing', AccessMode.ReadWrite)
-    Columns = proxy_property(int, 'Columns', AccessMode.ReadWrite)
-    ColumnWidth = proxy_property(float, 'ColumnWidth', AccessMode.ReadWrite)
-    Direction = proxy_property('PyGeVector3d', 'Direction', AccessMode.ReadWrite)
-    EnableBreak = proxy_property(bool, 'EnableBreak', AccessMode.ReadWrite)
-    FlowDirection = proxy_property('AcTableDirection', 'FlowDirection', AccessMode.ReadWrite)
-    HasSubSelection = proxy_property(bool, 'HasSubSelection', AccessMode.ReadWrite)
-    HeaderSuppressed = proxy_property(bool, 'HeaderSuppressed', AccessMode.ReadWrite)
-    Height = proxy_property(float, 'Height', AccessMode.ReadWrite)
-    HorzCellMargin = proxy_property(float, 'HorzCellMargin', AccessMode.ReadWrite)
-    InsertionPoint = proxy_property('PyGePoint3d', 'InsertionPoint', AccessMode.ReadWrite)
-    MinimumTableHeight = proxy_property(float, 'MinimumTableHeight', AccessMode.ReadOnly)
-    MinimumTableWidth = proxy_property(float, 'MinimumTableWidth', AccessMode.ReadOnly)
-    RegenerateTableSuppressed = proxy_property(bool, 'RegenerateTableSuppressed', AccessMode.ReadWrite)
-    RepeatBottomLabels = proxy_property(bool, 'RepeatBottomLabels', AccessMode.ReadWrite)
-    RowHeight = proxy_property(float, 'RowHeight', AccessMode.ReadWrite)
-    Rows = proxy_property(int, 'Rows', AccessMode.ReadWrite)
-    StyleName = proxy_property(str, 'StyleName', AccessMode.ReadWrite)
-    TableBreakFlowDirection = proxy_property('AcTableFlowDirection', 'TableBreakFlowDirection', AccessMode.ReadWrite)
-    TableBreakHeight = proxy_property(float, 'TableBreakHeight', AccessMode.ReadWrite)
-    TableStyleOverrides = proxy_property('AcTableStyleOverrides', 'TableStyleOverrides', AccessMode.ReadWrite)
-    TitleSuppressed = proxy_property(bool, 'TitleSuppressed', AccessMode.ReadWrite)
-    VertCellMargin = proxy_property(float, 'VertCellMargin', AccessMode.ReadWrite)
-    Width = proxy_property(float, 'Width', AccessMode.ReadWrite)
+    AllowManualHeights: bool = proxy_property(bool, 'AllowManualHeights', AccessMode.ReadWrite)
+    AllowManualPositions: bool = proxy_property(bool, 'AllowManualPositions', AccessMode.ReadWrite)
+    BreaksEnabled: bool = proxy_property(bool, 'BreaksEnabled', AccessMode.ReadWrite)
+    BreakSpacing: float = proxy_property(float, 'BreakSpacing', AccessMode.ReadWrite)
+    Columns: int = proxy_property(int, 'Columns', AccessMode.ReadWrite)
+    ColumnWidth: float = proxy_property(float, 'ColumnWidth', AccessMode.ReadWrite)
+    Direction: PyGeVector3d = proxy_property('PyGeVector3d', 'Direction', AccessMode.ReadWrite)
+    EnableBreak: bool = proxy_property(bool, 'EnableBreak', AccessMode.ReadWrite)
+    FlowDirection: AcTableDirection = proxy_property('AcTableDirection', 'FlowDirection', AccessMode.ReadWrite)
+    HasSubSelection: bool = proxy_property(bool, 'HasSubSelection', AccessMode.ReadOnly)
+    HeaderSuppressed: bool = proxy_property(bool, 'HeaderSuppressed', AccessMode.ReadWrite)
+    Height: float = proxy_property(float, 'Height', AccessMode.ReadWrite)
+    HorzCellMargin: float = proxy_property(float, 'HorzCellMargin', AccessMode.ReadWrite)
+    InsertionPoint: PyGePoint3d = proxy_property('PyGePoint3d', 'InsertionPoint', AccessMode.ReadWrite)
+    MinimumTableHeight: float = proxy_property(float, 'MinimumTableHeight', AccessMode.ReadOnly)
+    MinimumTableWidth: float = proxy_property(float, 'MinimumTableWidth', AccessMode.ReadOnly)
+    RegenerateTableSuppressed: bool = proxy_property(bool, 'RegenerateTableSuppressed', AccessMode.ReadWrite)
+    RepeatBottomLabels: bool = proxy_property(bool, 'RepeatBottomLabels', AccessMode.ReadWrite)
+    RowHeight: float = proxy_property(float, 'RowHeight', AccessMode.ReadWrite)
+    Rows: int = proxy_property(int, 'Rows', AccessMode.ReadWrite)
+    StyleName: str = proxy_property(str, 'StyleName', AccessMode.ReadWrite)
+    TableBreakFlowDirection: AcTableFlowDirection = proxy_property('AcTableFlowDirection', 'TableBreakFlowDirection', AccessMode.ReadWrite)
+    TableBreakHeight: float = proxy_property(float, 'TableBreakHeight', AccessMode.ReadWrite)
+    TableStyleOverrides: AcTableStyleOverrides = proxy_property('AcTableStyleOverrides', 'TableStyleOverrides', AccessMode.ReadWrite)
+    TitleSuppressed: bool = proxy_property(bool, 'TitleSuppressed', AccessMode.ReadWrite)
+    VertCellMargin: float = proxy_property(float, 'VertCellMargin', AccessMode.ReadWrite)
+    Width: float = proxy_property(float, 'Width', AccessMode.ReadWrite)
 
     def ClearSubSelection(self) -> None:
         self._obj.ClearSubSelection()
@@ -358,26 +358,12 @@ class AcadTable(AcadEntity):
     def ResetCellValue(self, row: int, col: int) -> None:
         self._obj.ResetCellValue(row, col)
 
-    def Select(
-        self, wpt: PyGePoint3d, wvwVec: PyGeVector3d, wvwxvec: PyGeVector3d, allowOutside: bool
-    ) -> tuple:
-        wxaper, wyaper, resultRowIndex, resultColumnIndex = self._obj.Select(
-            wpt(), wvwVec(), wvwxvec(), allowOutside
-        )
+    def Select(self, wpt: PyGePoint3d, wvwVec: PyGeVector3d, wvwxvec: PyGeVector3d, allowOutside: bool) -> tuple:
+        wxaper, wyaper, resultRowIndex, resultColumnIndex = self._obj.Select(wpt(), wvwVec(), wvwxvec(), allowOutside)
         return float(wxaper), float(wyaper), int(resultRowIndex), int(resultColumnIndex)
 
-    def SelectSubRegion(
-        self,
-        wpt1: PyGePoint3d,
-        wpt2: PyGePoint3d,
-        wvwVec: PyGeVector3d,
-        wvwxVec: PyGeVector3d,
-        seltype: AcSelectType,
-        bIncludeCurrentSelection: bool,
-    ) -> tuple:
-        rowMin, rowMax, colMin, colMax = self._obj.SelectSubRegion(
-            wpt1(), wpt2(), wvwVec(), wvwxVec(), seltype, bIncludeCurrentSelection
-        )
+    def SelectSubRegion(self, wpt1: PyGePoint3d, wpt2: PyGePoint3d, wvwVec: PyGeVector3d, wvwxVec: PyGeVector3d, seltype: AcSelectType, bIncludeCurrentSelection: bool) -> tuple:
+        rowMin, rowMax, colMin, colMax = self._obj.SelectSubRegion(wpt1(), wpt2(), wvwVec(), wvwxVec(), seltype, bIncludeCurrentSelection)
         return int(rowMin), int(rowMax), int(colMin), int(colMax)
 
     def SetAlignment(self, rowTypes: AcRowType, cellAlignment: AcCellAlignment) -> None:
@@ -398,9 +384,7 @@ class AcadTable(AcadEntity):
     def SetBlockAttributeValue(self, row: int, col: int, attdefId: int, StringValue: str) -> None:
         self._obj.SetBlockAttributeValue(row, col, attdefId, StringValue)
 
-    def SetBlockAttributeValue2(
-        self, nRow: int, nCol: int, nContent: int, blkId: int, value: str
-    ) -> None:
+    def SetBlockAttributeValue2(self, nRow: int, nCol: int, nContent: int, blkId: int, value: str) -> None:
         self._obj.SetBlockAttributeValue2(nRow, nCol, nContent, blkId, value)
 
     def SetBlockRotation(self, row: int, col: int, blkRotation: float) -> None:
@@ -412,9 +396,7 @@ class AcadTable(AcadEntity):
     def SetBlockTableRecordId(self, row: int, col: int, blkId: int, bAutoFit: bool) -> None:
         self._obj.SetBlockTableRecordId(row, col, blkId, bAutoFit)
 
-    def SetBlockTableRecordId2(
-        self, nRow: int, nCol: int, nContent: int, blkId: int, autoFit: bool
-    ) -> None:
+    def SetBlockTableRecordId2(self, nRow: int, nCol: int, nContent: int, blkId: int, autoFit: bool) -> None:
         self._obj.SetBlockTableRecordId2(nRow, nCol, nContent, blkId, autoFit)
 
     def SetBreakHeight(self, nIndex: int, dHeight: float) -> None:
@@ -432,27 +414,19 @@ class AcadTable(AcadEntity):
     def SetCellContentColor(self, row: int, col: int, pColor: AcadAcCmColor) -> None:
         self._obj.SetCellContentColor(row, col, pColor())
 
-    def SetCellDataType(
-        self, row: int, col: int, dataType: AcValueDataType, unitType: AcValueUnitType
-    ) -> None:
+    def SetCellDataType(self, row: int, col: int, dataType: AcValueDataType, unitType: AcValueUnitType) -> None:
         self._obj.SetCellDataType(row, col, dataType, unitType)
 
     def SetCellFormat(self, row: int, col: int, pFormat: str) -> None:
         self._obj.SetCellFormat(row, col, pFormat)
 
-    def SetCellGridColor(
-        self, row: int, col: int, edges: AcCellEdgeMask, pColor: AcadAcCmColor
-    ) -> None:
+    def SetCellGridColor(self, row: int, col: int, edges: AcCellEdgeMask, pColor: AcadAcCmColor) -> None:
         self._obj.SetCellGridColor(row, col, edges, pColor())
 
-    def SetCellGridLineWeight(
-        self, row: int, col: int, edges: AcCellEdgeMask, Lineweight: AcLineWeight
-    ) -> None:
+    def SetCellGridLineWeight(self, row: int, col: int, edges: AcCellEdgeMask, Lineweight: AcLineWeight) -> None:
         self._obj.SetCellGridLineWeight(row, col, edges, Lineweight)
 
-    def SetCellGridVisibility(
-        self, row: int, col: int, edges: AcCellEdgeMask, bValue: bool
-    ) -> None:
+    def SetCellGridVisibility(self, row: int, col: int, edges: AcCellEdgeMask, bValue: bool) -> None:
         self._obj.SetCellGridVisibility(row, col, edges, bValue)
 
     def SetCellState(self, nRow: int, nCol: int, nLock: AcCellState) -> None:
@@ -473,9 +447,7 @@ class AcadTable(AcadEntity):
     def SetCellValue(self, row: int, col: int) -> Variant:
         return Variant(self._obj.SetCellValue(row, col))
 
-    def SetCellValueFromText(
-        self, row: int, col: int, val: str, nOption: AcParseOption
-    ) -> None:
+    def SetCellValueFromText(self, row: int, col: int, val: str, nOption: AcParseOption) -> None:
         self._obj.SetCellValueFromText(row, col, val, nOption)
 
     def SetColumnName(self, nIndex: int, name: str) -> None:
@@ -487,9 +459,7 @@ class AcadTable(AcadEntity):
     def SetContentColor(self, rowTypes: AcRowType, pColor: AcadAcCmColor) -> None:
         self._obj.SetContentColor(rowTypes, pColor())
 
-    def SetContentColor2(
-        self, nRow: int, nCol: int, nContent: int, pColor: AcadAcCmColor
-    ) -> None:
+    def SetContentColor2(self, nRow: int, nCol: int, nContent: int, pColor: AcadAcCmColor) -> None:
         self._obj.SetContentColor2(nRow, nCol, nContent, pColor())
 
     def SetContentLayout(self, nRow: int, nCol: int, nLayout: AcCellContentLayout) -> None:
@@ -501,27 +471,16 @@ class AcadTable(AcadEntity):
     def SetDataFormat(self, nRow: int, nCol: int, nContent: int, szFormat: str) -> None:
         self._obj.SetDataFormat(nRow, nCol, nContent, szFormat)
 
-    def SetDataType(
-        self, rowTypes: AcRowType, nDataType: AcValueDataType, nUnitType: AcValueUnitType
-    ) -> None:
+    def SetDataType(self, rowTypes: AcRowType, nDataType: AcValueDataType, nUnitType: AcValueUnitType) -> None:
         self._obj.SetDataType(rowTypes, nDataType, nUnitType)
 
-    def SetDataType2(
-        self,
-        nRow: int,
-        nCol: int,
-        nContent: int,
-        dataType: AcValueDataType,
-        unitType: AcValueUnitType,
-    ) -> None:
+    def SetDataType2(self, nRow: int, nCol: int, nContent: int, dataType: AcValueDataType, unitType: AcValueUnitType) -> None:
         self._obj.SetDataType2(nRow, nCol, nContent, dataType, unitType)
 
     def SetFieldId(self, row: int, col: int, fieldId: int) -> None:
         self._obj.SetFieldId(row, col, fieldId)
 
-    def SetFieldId2(
-        self, nRow: int, nCol: int, nContent: int, acDbObjectId: int, nflag: AcCellOption
-    ) -> None:
+    def SetFieldId2(self, nRow: int, nCol: int, nContent: int, acDbObjectId: int, nflag: AcCellOption) -> None:
         self._obj.SetFieldId2(nRow, nCol, nContent, acDbObjectId, nflag)
 
     def SetFormat(self, rowTypes: AcRowType, pFormat: str) -> None:
@@ -530,49 +489,31 @@ class AcadTable(AcadEntity):
     def SetFormula(self, nRow: int, nCol: int, nContent: int, pszFormula: str) -> None:
         self._obj.SetFormula(nRow, nCol, nContent, pszFormula)
 
-    def SetGridColor(
-        self, gridLineTypes: AcGridLineType, rowTypes: AcRowType, pColor: AcadAcCmColor
-    ) -> None:
+    def SetGridColor(self, gridLineTypes: AcGridLineType, rowTypes: AcRowType, pColor: AcadAcCmColor) -> None:
         self._obj.SetGridColor(gridLineTypes, rowTypes, pColor())
 
-    def SetGridColor2(
-        self, nRow: int, nCol: int, nGridLineType: AcGridLineType, pColor: AcadAcCmColor
-    ) -> None:
+    def SetGridColor2(self, nRow: int, nCol: int, nGridLineType: AcGridLineType, pColor: AcadAcCmColor) -> None:
         self._obj.SetGridColor2(nRow, nCol, nGridLineType, pColor())
 
-    def SetGridDoubleLineSpacing(
-        self, nRow: int, nCol: int, nGridLineType: AcGridLineType, fSpacing: float
-    ) -> None:
+    def SetGridDoubleLineSpacing(self, nRow: int, nCol: int, nGridLineType: AcGridLineType, fSpacing: float) -> None:
         self._obj.SetGridDoubleLineSpacing(nRow, nCol, nGridLineType, fSpacing)
 
-    def SetGridLineStyle(
-        self, nRow: int, nCol: int, nGridLineType: AcGridLineType, nLineStyle: AcGridLineStyle
-    ) -> None:
+    def SetGridLineStyle(self, nRow: int, nCol: int, nGridLineType: AcGridLineType, nLineStyle: AcGridLineStyle) -> None:
         self._obj.SetGridLineStyle(nRow, nCol, nGridLineType, nLineStyle)
 
-    def SetGridLinetype(
-        self, nRow: int, nCol: int, nGridLineType: AcGridLineType, idLinetype: int
-    ) -> None:
+    def SetGridLinetype(self, nRow: int, nCol: int, nGridLineType: AcGridLineType, idLinetype: int) -> None:
         self._obj.SetGridLinetype(nRow, nCol, nGridLineType, idLinetype)
 
-    def SetGridLineWeight(
-        self, gridLineTypes: AcGridLineType, rowTypes: AcRowType, Lineweight: AcLineWeight
-    ) -> None:
+    def SetGridLineWeight(self, gridLineTypes: AcGridLineType, rowTypes: AcRowType, Lineweight: AcLineWeight) -> None:
         self._obj.SetGridLineWeight(gridLineTypes, rowTypes, Lineweight)
 
-    def SetGridLineWeight2(
-        self, nRow: int, nCol: int, nGridLineType: AcGridLineType, lineWeight: AcLineWeight
-    ) -> None:
+    def SetGridLineWeight2(self, nRow: int, nCol: int, nGridLineType: AcGridLineType, lineWeight: AcLineWeight) -> None:
         self._obj.SetGridLineWeight2(nRow, nCol, nGridLineType, lineWeight)
 
-    def SetGridVisibility(
-        self, gridLineTypes: AcGridLineType, rowTypes: AcRowType, bValue: bool
-    ) -> None:
+    def SetGridVisibility(self, gridLineTypes: AcGridLineType, rowTypes: AcRowType, bValue: bool) -> None:
         self._obj.SetGridVisibility(gridLineTypes, rowTypes, bValue)
 
-    def SetGridVisibility2(
-        self, nRow: int, nCol: int, nGridLineType: AcGridLineType, bVisible: bool
-    ) -> None:
+    def SetGridVisibility2(self, nRow: int, nCol: int, nGridLineType: AcGridLineType, bVisible: bool) -> None:
         self._obj.SetGridVisibility2(nRow, nCol, nGridLineType, bVisible)
 
     def SetMargin(self, nRow: int, nCol: int, nMargins: AcCellMargin, fMargin: float) -> None:
@@ -620,9 +561,7 @@ class AcadTable(AcadEntity):
     def SetValue(self, nRow: int, nCol: int, nContent: int, acValue: Variant) -> None:
         self._obj.SetValue(nRow, nCol, nContent, acValue())
 
-    def SetValueFromText(
-        self, nRow: int, nCol: int, nContent: int, szText: str, nOption: AcParseOption
-    ) -> None:
+    def SetValueFromText(self, nRow: int, nCol: int, nContent: int, szText: str, nOption: AcParseOption) -> None:
         self._obj.SetValueFromText(nRow, nCol, nContent, szText, nOption)
 
     def UnmergeCells(self, minRow: int, maxRow: int, minCol: int, maxCol: int) -> None:

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from ..Proxy import proxy_property, AccessMode
 from ..AcadEntity import AcadEntity
-from ...Types.Ge import PyGePoint3d
+from ...Types.Ge import PyGePoint3d, PyGePoint3dArray, PyGeVector3d
 from ...Types.VarType import vObjectArray, vDoubleArray
 
 
@@ -10,15 +10,15 @@ class AcadLWPolyline(AcadEntity):
     def __init__(self, obj) -> None:
         super().__init__(obj)
 
-    Area = proxy_property(float, 'Area', AccessMode.ReadOnly)
-    Closed = proxy_property(bool, 'Closed', AccessMode.ReadWrite)
-    ConstantWidth = proxy_property(float, 'ConstantWidth', AccessMode.ReadWrite)
-    Coordinates = proxy_property('PyGePoint3dArray', 'Coordinates', AccessMode.ReadWrite)
-    Elevation = proxy_property(float, 'Elevation', AccessMode.ReadWrite)
-    Length = proxy_property(float, 'Length', AccessMode.ReadOnly)
-    LinetypeGeneration = proxy_property(bool, 'LinetypeGeneration', AccessMode.ReadWrite)
-    Normal = proxy_property('PyGeVector3d', 'Normal', AccessMode.ReadWrite)
-    Thickness = proxy_property(float, 'Thickness', AccessMode.ReadWrite)
+    Area: float = proxy_property(float, 'Area', AccessMode.ReadOnly)
+    Closed: bool = proxy_property(bool, 'Closed', AccessMode.ReadWrite)
+    ConstantWidth: float = proxy_property(float, 'ConstantWidth', AccessMode.ReadWrite)
+    Coordinates: PyGePoint3dArray = proxy_property('PyGePoint3dArray', 'Coordinates', AccessMode.ReadWrite)
+    Elevation: float = proxy_property(float, 'Elevation', AccessMode.ReadWrite)
+    Length: float = proxy_property(float, 'Length', AccessMode.ReadOnly)
+    LinetypeGeneration: bool = proxy_property(bool, 'LinetypeGeneration', AccessMode.ReadWrite)
+    Normal: PyGeVector3d = proxy_property('PyGeVector3d', 'Normal', AccessMode.ReadWrite)
+    Thickness: float = proxy_property(float, 'Thickness', AccessMode.ReadWrite)
 
     def Coordinate(self, Index: int) -> PyGePoint3d:
         return PyGePoint3d(self._obj.Coordinate(Index))

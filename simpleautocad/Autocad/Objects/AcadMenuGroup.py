@@ -8,13 +8,13 @@ class AcadMenuGroup(AppObject):
     def __init__(self, obj) -> None:
         super().__init__(obj)
 
-    Application = proxy_property('AcadApplication', 'Application', AccessMode.ReadOnly)
-    MenuFileName = proxy_property(str, 'MenuFileName', AccessMode.ReadOnly)
-    Menus = proxy_property('AcadPopupMenus', 'Menus', AccessMode.ReadOnly)
-    Name = proxy_property(str, 'Name', AccessMode.ReadWrite)
-    Parent = proxy_property('AppObject', 'Parent', AccessMode.ReadWrite)
-    Toolbars = proxy_property('AcadToolbars', 'Toolbars', AccessMode.ReadOnly)
-    Type = proxy_property('AcMenuGroupType', 'Type', AccessMode.ReadOnly)
+    Application: AcadApplication = proxy_property('AcadApplication', 'Application', AccessMode.ReadOnly)
+    MenuFileName: str = proxy_property(str, 'MenuFileName', AccessMode.ReadOnly)
+    Menus: AcadPopupMenus = proxy_property('AcadPopupMenus', 'Menus', AccessMode.ReadOnly)
+    Name: str = proxy_property(str, 'Name', AccessMode.ReadWrite)
+    Parent: AppObject = proxy_property('AppObject', 'Parent', AccessMode.ReadWrite)
+    Toolbars: AcadToolbars = proxy_property('AcadToolbars', 'Toolbars', AccessMode.ReadOnly)
+    Type: AcMenuGroupType = proxy_property('AcMenuGroupType', 'Type', AccessMode.ReadOnly)
 
     def Save(self, MenuFileType) -> None:
         self._obj.Save(MenuFileType)

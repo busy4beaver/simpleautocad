@@ -8,16 +8,16 @@ class AcadToolbarItem(AppObject):
     def __init__(self, obj) -> None:
         super().__init__(obj)
 
-    Application = proxy_property('AcadApplication', 'Application', AccessMode.ReadOnly)
-    CommandDisplayName = proxy_property(str, 'CommandDisplayName', AccessMode.ReadWrite)
-    Flyout = proxy_property('AcadToolbar', 'Flyout', AccessMode.ReadOnly)
-    HelpString = proxy_property(str, 'HelpString', AccessMode.ReadWrite)
-    Index = proxy_property(int, 'Index', AccessMode.ReadOnly)
-    Macro = proxy_property(str, 'Macro', AccessMode.ReadWrite)
-    Name = proxy_property(str, 'Name', AccessMode.ReadWrite)
-    Parent = proxy_property('AppObject', 'Parent', AccessMode.ReadWrite)
-    TagString = proxy_property(str, 'TagString', AccessMode.ReadWrite)
-    Type = proxy_property('AcToolbarItemType', 'Type', AccessMode.ReadOnly)
+    Application: AcadApplication = proxy_property('AcadApplication', 'Application', AccessMode.ReadOnly)
+    CommandDisplayName: str = proxy_property(str, 'CommandDisplayName', AccessMode.ReadWrite)
+    Flyout: AcadToolbar = proxy_property('AcadToolbar', 'Flyout', AccessMode.ReadOnly)
+    HelpString: str = proxy_property(str, 'HelpString', AccessMode.ReadWrite)
+    Index: int = proxy_property(int, 'Index', AccessMode.ReadOnly)
+    Macro: str = proxy_property(str, 'Macro', AccessMode.ReadWrite)
+    Name: str = proxy_property(str, 'Name', AccessMode.ReadWrite)
+    Parent: AppObject = proxy_property('AppObject', 'Parent', AccessMode.ReadWrite)
+    TagString: str = proxy_property(str, 'TagString', AccessMode.ReadWrite)
+    Type: AcToolbarItemType = proxy_property('AcToolbarItemType', 'Type', AccessMode.ReadOnly)
 
     def AttachToolbarToFlyout(self, MenuGroupName: str, ToolbarName: str) -> None:
         self._obj.AttachToolbarToFlyout(MenuGroupName, ToolbarName)

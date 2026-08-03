@@ -8,8 +8,5 @@ class AcadNurbSurface(AcadSurface):
     def __init__(self, obj) -> None:
         super().__init__(obj)
 
-    CvHullDisplay = proxy_property(bool, 'CvHullDisplay', AccessMode.ReadWrite)
-    Height = proxy_property(float, 'Height', AccessMode.ReadWrite)
-
-    def Copy(self) -> AcadNurbSurface:
-        return AcadNurbSurface(self._obj.Copy())
+    CVHullDisplay: bool = proxy_property(bool, 'CVHullDisplay', AccessMode.ReadWrite)
+    ShowCVHull: bool = proxy_property(bool, 'ShowCVHull', AccessMode.ReadWrite)

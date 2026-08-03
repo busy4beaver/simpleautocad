@@ -10,8 +10,8 @@ class AcadDictionary(AcadObject):
     def __init__(self, obj) -> None:
         super().__init__(obj)
 
-    Name = proxy_property(str, 'Name', AccessMode.ReadOnly)
-    Count = proxy_property(int, 'Count', AccessMode.ReadOnly)
+    Name: str = proxy_property(str, 'Name', AccessMode.ReadOnly)
+    Count: int = proxy_property(int, 'Count', AccessMode.ReadOnly)
 
     def AddObject(self, Keyword: str, ObjectName: str) -> AcadObject:
         return AcadObject(self._obj.AddObject(Keyword, ObjectName))

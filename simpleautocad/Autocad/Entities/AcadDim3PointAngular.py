@@ -2,50 +2,45 @@ from __future__ import annotations
 
 from ..Proxy import proxy_property, AccessMode
 from .AcadDimension import AcadDimension
+from ...Types.Ac import (
+    AcAngleUnits,
+    AcColor,
+    AcLineWeight,
+    AcDimFit,
+    AcDimHorizontalJustification,
+    AcDimToleranceMethod,
+    AcDimToleranceJustify,
+    AcDimPrecision,
+)
 
 
 class AcadDim3PointAngular(AcadDimension):
-    def __init__(self, obj) -> None: super().__init__(obj)
+    def __init__(self, obj) -> None:
+        super().__init__(obj)
 
-    AngleFormat = proxy_property('AcAngleUnits','AngleFormat',AccessMode.ReadWrite)
-    AngleVertex = proxy_property('PyGePoint3d','AngleVertex',AccessMode.ReadWrite)
-    Arrowhead1Block: str = proxy_property(str,'Arrowhead1Block',AccessMode.ReadWrite)
-    Arrowhead1Type = proxy_property('AcDimArrowheadType','Arrowhead1Type',AccessMode.ReadWrite)
-    Arrowhead2Block: str = proxy_property(str,'Arrowhead2Block',AccessMode.ReadWrite)
-    Arrowhead2Type = proxy_property('AcDimArrowheadType','Arrowhead2Type',AccessMode.ReadWrite)
-    ArrowheadSize: int = proxy_property(int,'ArrowheadSize',AccessMode.ReadWrite)
-    DimConstrDesc: str = proxy_property(str,'DimConstrDesc',AccessMode.ReadWrite)
-    DimConstrExpression: str = proxy_property(str,'DimConstrExpression',AccessMode.ReadWrite)
-    DimConstrForm: bool = proxy_property(bool,'DimConstrForm',AccessMode.ReadWrite)
-    DimConstrName: str = proxy_property(str,'DimConstrName',AccessMode.ReadWrite)
-    DimConstrReference: bool = proxy_property(bool,'DimConstrReference',AccessMode.ReadWrite)
-    DimConstrValue: str = proxy_property(str,'DimConstrValue',AccessMode.ReadWrite)
-    DimensionLineColor = proxy_property('AcColor','DimensionLineColor',AccessMode.ReadWrite)
-    DimensionLinetype: str = proxy_property(str,'DimensionLinetype',AccessMode.ReadWrite)
-    DimensionLineWeight = proxy_property('AcLineWeight','DimensionLineWeight',AccessMode.ReadWrite)
-    DimLine1Suppress: bool = proxy_property(bool,'DimLine1Suppress',AccessMode.ReadWrite)
-    DimLine2Suppress: bool = proxy_property(bool,'DimLine2Suppress',AccessMode.ReadWrite)
-    DimLineInside: bool = proxy_property(bool,'DimLineInside',AccessMode.ReadWrite)
-    ExtensionLineColor = proxy_property('AcColor','ExtensionLineColor',AccessMode.ReadWrite)
-    ExtensionLineExtend: float = proxy_property(float,'ExtensionLineExtend',AccessMode.ReadWrite)
-    ExtensionLineOffset: float = proxy_property(float,'ExtensionLineOffset',AccessMode.ReadWrite)
-    ExtensionLineWeight = proxy_property('AcLineWeight','ExtensionLineWeight',AccessMode.ReadWrite)
-    ExtLine1EndPoint = proxy_property('PyGePoint3d','ExtLine1EndPoint',AccessMode.ReadWrite)
-    ExtLine1Linetype: str = proxy_property(str,'ExtLine1Linetype',AccessMode.ReadWrite)
-    ExtLine1Suppress: bool = proxy_property(bool,'ExtLine1Suppress',AccessMode.ReadWrite)
-    ExtLine2EndPoint = proxy_property('PyGePoint3d','ExtLine2EndPoint',AccessMode.ReadWrite)
-    ExtLine2Linetype: str = proxy_property(str,'ExtLine2Linetype',AccessMode.ReadWrite)
-    ExtLine2Suppress: bool = proxy_property(bool,'ExtLine2Suppress',AccessMode.ReadWrite)
-    ExtLineFixedLen: float = proxy_property(float,'ExtLineFixedLen',AccessMode.ReadWrite)
-    ExtLineFixedLenSuppress: bool = proxy_property(bool,'ExtLineFixedLenSuppress',AccessMode.ReadWrite)
-    Fit = proxy_property('AcDimFit','Fit',AccessMode.ReadWrite)
-    ForceLineInside: bool = proxy_property(bool,'ForceLineInside',AccessMode.ReadWrite)
-    HorizontalTextPosition = proxy_property('AcDimHorizontalJustification','HorizontalTextPosition',AccessMode.ReadWrite)
-    Measurement: float = proxy_property(float,'Measurement',AccessMode.ReadOnly)
-    TextInside: bool = proxy_property(bool,'TextInside',AccessMode.ReadWrite)
-    TextInsideAlign: bool = proxy_property(bool,'TextInsideAlign',AccessMode.ReadWrite)
-    TextOutsideAlign: bool = proxy_property(bool,'TextOutsideAlign',AccessMode.ReadWrite)
-    TextPrecision = proxy_property('AcDimPrecision','TextPrecision',AccessMode.ReadWrite)
+    AngleFormat: AcAngleUnits = proxy_property('AcAngleUnits', 'AngleFormat', AccessMode.ReadWrite)
+    DimensionLineColor: AcColor = proxy_property('AcColor', 'DimensionLineColor', AccessMode.ReadWrite)
+    DimensionLineWeight: AcLineWeight = proxy_property('AcLineWeight', 'DimensionLineWeight', AccessMode.ReadWrite)
+    DimLine1Suppress: bool = proxy_property(bool, 'DimLine1Suppress', AccessMode.ReadWrite)
+    DimLine2Suppress: bool = proxy_property(bool, 'DimLine2Suppress', AccessMode.ReadWrite)
+    ExtLine1Suppress: bool = proxy_property(bool, 'ExtLine1Suppress', AccessMode.ReadWrite)
+    ExtLine2Suppress: bool = proxy_property(bool, 'ExtLine2Suppress', AccessMode.ReadWrite)
+    Fit: AcDimFit = proxy_property('AcDimFit', 'Fit', AccessMode.ReadWrite)
+    ForceLineInside: bool = proxy_property(bool, 'ForceLineInside', AccessMode.ReadWrite)
+    HorizontalTextPosition: AcDimHorizontalJustification = proxy_property('AcDimHorizontalJustification', 'HorizontalTextPosition', AccessMode.ReadWrite)
+    TextInside: bool = proxy_property(bool, 'TextInside', AccessMode.ReadWrite)
+    TextInsideAlign: bool = proxy_property(bool, 'TextInsideAlign', AccessMode.ReadWrite)
+    TextOutsideAlign: bool = proxy_property(bool, 'TextOutsideAlign', AccessMode.ReadWrite)
+    TextPrefix: str = proxy_property(str, 'TextPrefix', AccessMode.ReadWrite)
+    TextSuffix: str = proxy_property(str, 'TextSuffix', AccessMode.ReadWrite)
+    ToleranceDisplay: AcDimToleranceMethod = proxy_property('AcDimToleranceMethod', 'ToleranceDisplay', AccessMode.ReadWrite)
+    ToleranceHeightScale: float = proxy_property(float, 'ToleranceHeightScale', AccessMode.ReadWrite)
+    ToleranceJustification: AcDimToleranceJustify = proxy_property('AcDimToleranceJustify', 'ToleranceJustification', AccessMode.ReadWrite)
+    ToleranceLowerLimit: float = proxy_property(float, 'ToleranceLowerLimit', AccessMode.ReadWrite)
+    TolerancePrecision: AcDimPrecision = proxy_property('AcDimPrecision', 'TolerancePrecision', AccessMode.ReadWrite)
+    ToleranceSuppressLeadingZeros: bool = proxy_property(bool, 'ToleranceSuppressLeadingZeros', AccessMode.ReadWrite)
+    ToleranceSuppressTrailingZeros: bool = proxy_property(bool, 'ToleranceSuppressTrailingZeros', AccessMode.ReadWrite)
+    ToleranceUpperLimit: float = proxy_property(float, 'ToleranceUpperLimit', AccessMode.ReadWrite)
 
     def Copy(self) -> AcadDim3PointAngular:
         return AcadDim3PointAngular(self._obj.Copy())

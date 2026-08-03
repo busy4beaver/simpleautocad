@@ -10,10 +10,10 @@ class Acad3DPolyline(AcadEntity):
     def __init__(self, obj) -> None:
         super().__init__(obj)
 
-    Closed = proxy_property(bool, 'Closed', AccessMode.ReadWrite)
-    Coordinates = proxy_property('PyGePoint3dArray', 'Coordinates', AccessMode.ReadWrite)
-    Length = proxy_property(float, 'Length', AccessMode.ReadOnly)
-    Type = proxy_property('Ac3DPolylineType', 'Type', AccessMode.ReadWrite)
+    Closed: bool = proxy_property(bool, 'Closed', AccessMode.ReadWrite)
+    Coordinates: PyGePoint3dArray = proxy_property('PyGePoint3dArray', 'Coordinates', AccessMode.ReadWrite)
+    Length: float = proxy_property(float, 'Length', AccessMode.ReadOnly)
+    Type: Ac3DPolylineType = proxy_property('Ac3DPolylineType', 'Type', AccessMode.ReadWrite)
 
     def Coordinate(self, Index: int) -> PyGePoint3d:
         return PyGePoint3d(self._obj.Coordinate(Index))

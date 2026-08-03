@@ -8,4 +8,4 @@ class AcadRegisteredApplication(AcadObject):
     def __init__(self, obj) -> None:
         super().__init__(obj)
 
-    Name = proxy_property(str, 'Name', AccessMode.ReadWrite)
+    Name: str = proxy_property(str, 'Name', AccessMode.ReadWrite)
