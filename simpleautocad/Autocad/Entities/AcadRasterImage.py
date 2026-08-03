@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from ..Proxy import proxy_property, AccessMode
 from ..AcadEntity import AcadEntity
-from ...Types.Ge import PyGePoint2dArray
+from ...Types.Ge import PyGePoint2dArray, PyGePoint3d
 
 
 class AcadRasterImage(AcadEntity):

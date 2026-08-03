@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 
 from ..Proxy import proxy_property, AccessMode
 from ..AcadEntity import AcadEntity
-from ...Types.Ge import PyGePoint3dArray
+from ...Types.Ge import PyGePoint3d, PyGePoint3dArray
 
 
 class AcadUnderlay(AcadEntity, ABC):
