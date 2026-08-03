@@ -1,9 +1,15 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from ..Proxy import proxy_property, AccessMode
 from ..AcadObject import AcadObject
 from ...Types.VarType import vObjectArray, Variant
 from ...Types.Ac import AcSelect
+
+if TYPE_CHECKING:
+    from .AcadApplication import AcadApplication
+    from ..AcadEntity import AcadEntity
 
 
 class AcadSelectionSet(AcadObject):

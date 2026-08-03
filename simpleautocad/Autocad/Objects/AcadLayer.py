@@ -1,7 +1,15 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from ..Proxy import proxy_property, AccessMode
 from ..AcadObject import AcadObject
+from ...Types.Ac import AcLineWeight
+
+if TYPE_CHECKING:
+    from .AcadApplication import AcadApplication
+    from .AcadDocument import AcadDocument
+    from .AcadAcCmColor import AcadAcCmColor
 
 
 class AcadLayer(AcadObject):
