@@ -1,10 +1,27 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from ..Proxy import proxy_property, AccessMode
 from ..AcadEntity import AcadEntity
-from ...Types.Ge import PyGePoint3dArray, PyGeVector3d
+from ...Types.Ge import PyGePoint3d, PyGePoint3dArray, PyGeVector3d
 from ...Types.VarType import vDoubleArray
-from .AcadLeader import AcadLeader
+from ...Types.Ac import (
+    AcDimArrowheadType,
+    AcBlockConnectionType,
+    AcMLeaderContentType,
+    AcLineWeight,
+    AcLeaderType,
+    AcTextAlignmentType,
+    AcDrawingDirection,
+    AcAttachmentPoint,
+    AcTextAttachmentType,
+    AcLineSpacingStyle,
+    AcMLeaderType,
+)
+
+if TYPE_CHECKING:
+    from ..Objects.AcadAcCmColor import AcadAcCmColor
 
 
 class AcadMLeader(AcadEntity):
