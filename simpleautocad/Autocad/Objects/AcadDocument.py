@@ -1,9 +1,47 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from ..Proxy import proxy_property, AccessMode
 from ..AcadObject import AcadObject
 from ...Types.VarType import Variant
 from ...Types.Ac import AcActiveSpace, AcWindowState
+
+if TYPE_CHECKING:
+    from ..AcadEntity import AcadEntity
+    from .AcadApplication import AcadApplication
+    from .AcadBlocks import AcadBlocks
+    from .AcadDatabase import AcadDatabase
+    from .AcadDatabasePreferences import AcadDatabasePreferences
+    from .AcadDictionaries import AcadDictionaries
+    from .AcadDimStyle import AcadDimStyle
+    from .AcadDimStyles import AcadDimStyles
+    from .AcadGroups import AcadGroups
+    from .AcadLayer import AcadLayer
+    from .AcadLayers import AcadLayers
+    from .AcadLayout import AcadLayout
+    from .AcadLayouts import AcadLayouts
+    from .AcadLineType import AcadLineType
+    from .AcadLineTypes import AcadLineTypes
+    from .AcadMaterial import AcadMaterial
+    from .AcadMaterials import AcadMaterials
+    from .AcadModelSpace import AcadModelSpace
+    from .AcadPaperSpace import AcadPaperSpace
+    from .AcadPlot import AcadPlot
+    from .AcadPlotConfigurations import AcadPlotConfigurations
+    from ..Entities.AcadPViewport import AcadPViewport
+    from .AcadRegisteredApplications import AcadRegisteredApplications
+    from .AcadSelectionSet import AcadSelectionSet
+    from .AcadSelectionSets import AcadSelectionSets
+    from .AcadSummaryInfo import AcadSummaryInfo
+    from .AcadTextStyle import AcadTextStyle
+    from .AcadTextStyles import AcadTextStyles
+    from .AcadUCS import AcadUCS
+    from .AcadUCSs import AcadUCSs
+    from .AcadUtility import AcadUtility
+    from .AcadViewport import AcadViewport
+    from .AcadViewports import AcadViewports
+    from .AcadViews import AcadViews
 
 
 class AcadDocument(AcadObject):
