@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from ..Proxy import proxy_property, AccessMode
 from ..AcadEntity import AcadEntity
-from ...Types.Ge import PyGePoint3d
+from ...Types.Ge import PyGePoint3d, PyGePoint3dArray
 
 
 class Acad3DFace(AcadEntity):

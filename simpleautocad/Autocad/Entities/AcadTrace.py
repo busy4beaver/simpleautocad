@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from ..Proxy import proxy_property, AccessMode
 from ..AcadEntity import AcadEntity
-from ...Types.Ge import PyGePoint3dArray
+from ...Types.Ge import PyGePoint3dArray, PyGeVector3d
 
 
 class AcadTrace(AcadEntity):
