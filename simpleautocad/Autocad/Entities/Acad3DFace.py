@@ -15,5 +15,14 @@ class Acad3DFace(AcadEntity):
     VisibilityEdge3: bool = proxy_property(bool, 'VisibilityEdge3', AccessMode.ReadWrite)
     VisibilityEdge4: bool = proxy_property(bool, 'VisibilityEdge4', AccessMode.ReadWrite)
 
-    def Coordinate(self, Index: int, pVal: PyGePoint3d) -> None:
-        self._obj.Coordinate(Index, pVal())
+    def Coordinate(self, Index: int) -> PyGePoint3d:
+        return PyGePoint3d(self._obj.Coordinate(Index))
+
+    def Copy(self) -> Acad3DFace:
+        return Acad3DFace(self._obj.Copy())
+
+    def GetInvisibleEdge(self, Index: int) -> bool:
+        return self._obj.GetInvisibleEdge(Index)
+
+    def SetInvisibleEdge(self, Index: int, State: bool) -> None:
+        self._obj.SetInvisibleEdge(Index, State)
