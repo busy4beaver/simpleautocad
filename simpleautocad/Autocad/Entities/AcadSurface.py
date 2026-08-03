@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from ..Proxy import proxy_property, AccessMode
 from ..AcadEntity import AcadEntity
+from ...Types.Ac import AcWireframeType
 
 
 class AcadSurface(AcadEntity):
