@@ -1,8 +1,31 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from ..Proxy import proxy_property, AccessMode
 from ..AcadObject import AcadObject
 from ...Types.VarType import Variant
+
+if TYPE_CHECKING:
+    from .AcadBlocks import AcadBlocks
+    from .AcadDictionaries import AcadDictionaries
+    from .AcadDimStyles import AcadDimStyles
+    from .AcadGroups import AcadGroups
+    from .AcadLayers import AcadLayers
+    from .AcadLayouts import AcadLayouts
+    from .AcadLineTypes import AcadLineTypes
+    from .AcadMaterials import AcadMaterials
+    from .AcadModelSpace import AcadModelSpace
+    from .AcadPaperSpace import AcadPaperSpace
+    from .AcadPlotConfigurations import AcadPlotConfigurations
+    from .AcadDatabasePreferences import AcadDatabasePreferences
+    from .AcadRegisteredApplications import AcadRegisteredApplications
+    from .AcadSectionManager import AcadSectionManager
+    from .AcadSummaryInfo import AcadSummaryInfo
+    from .AcadTextStyles import AcadTextStyles
+    from .AcadUCSs import AcadUCSs
+    from .AcadViewports import AcadViewports
+    from .AcadViews import AcadViews
 
 
 class AcadDatabase(AcadObject):

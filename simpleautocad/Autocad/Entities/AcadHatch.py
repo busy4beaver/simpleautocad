@@ -1,8 +1,15 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from ..Proxy import proxy_property, AccessMode
 from ..AcadEntity import AcadEntity
 from ...Types.VarType import vObjectArray
+from ...Types.Ge import PyGePoint3d, PyGeVector3d
+from ...Types.Ac import AcHatchObjectType, AcHatchStyle, AcISOPenWidth, AcPatternType
+
+if TYPE_CHECKING:
+    from ..Objects.AcadAcCmColor import AcadAcCmColor
 
 
 class AcadHatch(AcadEntity):

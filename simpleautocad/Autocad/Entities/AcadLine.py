@@ -3,6 +3,7 @@ from __future__ import annotations
 from ..Proxy import proxy_property, AccessMode
 from ..AcadEntity import AcadEntity
 from ...Types.VarType import vObjectArray
+from ...Types.Ge import PyGePoint3d, PyGeVector3d
 
 
 class AcadLine(AcadEntity):
