@@ -1,11 +1,17 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from .Base import AppObject
 from .Proxy import proxy_property, AccessMode
 from .AcadObject import AcadObject
 from ..Types.Ac import AcExtendOption, AcLineWeight, AcColor
 from ..Types.Ge import PyGePoint3d, PyGePoint3dArray, PyGeMatrix3d
 from ..Types.VarType import vObjectArray
+
+if TYPE_CHECKING:
+    from .Objects.AcadHyperlinks import AcadHyperlinks
+    from .Objects.AcadAcCmColor import AcadAcCmColor
 
 
 class AcadEntity(AcadObject):

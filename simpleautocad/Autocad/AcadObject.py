@@ -1,8 +1,14 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from .Base import AppObject
 from .Proxy import proxy_property, AccessMode
 from ..Types.VarType import vShortArray, vVariantArray
+
+if TYPE_CHECKING:
+    from .Objects.AcadApplication import AcadApplication
+    from .Objects.AcadDocument import AcadDocument
 
 
 class IAcadObject(AppObject):
