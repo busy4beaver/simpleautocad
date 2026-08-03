@@ -2,65 +2,76 @@ from __future__ import annotations
 
 from ..Proxy import proxy_property, AccessMode
 from ..AcadEntity import AcadEntity
-from ...Types.Ge import PyGePoint3dArray, PyGeVector3d
-from ...Types.VarType import vDoubleArray
-from .AcadLeader import AcadLeader
+from ...Types.Ge import PyGePoint3d, PyGeVector3d
+from ...Types.Ac import (
+    AcMLeaderType,
+    AcMLeaderContentType,
+    AcTextAttachmentType,
+    AcTextAttachmentDirection,
+    AcVerticalTextAttachmentType,
+    AcHorizontalTextAttachmentType,
+    AcTextAlignmentType,
+    AcDrawingDirection,
+    AcLineSpacingStyle,
+    AcDimArrowheadType,
+    AcColor,
+    AcLeaderType,
+    AcBlockConnectionType,
+)
 
 
 class AcadMLeader(AcadEntity):
-    def __init__(self, obj, leaderLineIndex=0) -> None:
-        self.leaderLineIndex = leaderLineIndex
+    def __init__(self, obj) -> None:
         super().__init__(obj)
 
-    ArrowheadBlock = proxy_property(str, 'ArrowheadBlock', AccessMode.ReadWrite)
-    ArrowheadSize = proxy_property(float, 'ArrowheadSize', AccessMode.ReadWrite)
-    ArrowheadType = proxy_property('AcDimArrowheadType', 'ArrowheadType', AccessMode.ReadWrite)
-    BlockConnectionType = proxy_property('AcBlockConnectionType', 'BlockConnectionType', AccessMode.ReadWrite)
-    BlockScale = proxy_property(int, 'BlockScale', AccessMode.ReadWrite)
-    ContentBlockName = proxy_property(str, 'ContentBlockName', AccessMode.ReadWrite)
-    ContentBlockType = proxy_property('AcPredefBlockType', 'ContentBlockType', AccessMode.ReadWrite)
-    ContentType = proxy_property('AcMLeaderContentType', 'ContentType', AccessMode.ReadWrite)
-    DogLegged = proxy_property(bool, 'DogLegged', AccessMode.ReadWrite)
-    DoglegLength = proxy_property(float, 'DoglegLength', AccessMode.ReadWrite)
-    LandingGap = proxy_property(float, 'LandingGap', AccessMode.ReadWrite)
-    LeaderCount = proxy_property(int, 'LeaderCount', AccessMode.ReadOnly)
-    LeaderLineColor = proxy_property('AcadAcCmColor', 'LeaderLineColor', AccessMode.ReadWrite)
-    LeaderLinetype = proxy_property(str, 'LeaderLinetype', AccessMode.ReadWrite)
-    LeaderLineWeight = proxy_property('AcLineWeight', 'LeaderLineWeight', AccessMode.ReadWrite)
-    LeaderType = proxy_property('AcMLeaderType', 'LeaderType', AccessMode.ReadWrite)
-    Normal = proxy_property('PyGeVector3d', 'Normal', AccessMode.ReadWrite)
-    ScaleFactor = proxy_property(float, 'ScaleFactor', AccessMode.ReadWrite)
-    StyleName = proxy_property(str, 'StyleName', AccessMode.ReadWrite)
-    TextAttachmentDirection = proxy_property('AcTextAttachmentDirection', 'TextAttachmentDirection', AccessMode.ReadWrite)
-    TextBackgroundFill = proxy_property(bool, 'TextBackgroundFill', AccessMode.ReadWrite)
-    TextBottomAttachmentType = proxy_property('AcVerticalTextAttachmentType', 'TextBottomAttachmentType', AccessMode.ReadWrite)
-    TextDirection = proxy_property('AcDrawingDirection', 'TextDirection', AccessMode.ReadWrite)
-    TextFrameDisplay = proxy_property(bool, 'TextFrameDisplay', AccessMode.ReadWrite)
-    TextHeight = proxy_property(float, 'TextHeight', AccessMode.ReadWrite)
-    TextJustify = proxy_property('AcAttachmentPoint', 'TextJustify', AccessMode.ReadWrite)
-    TextLeftAttachmentType = proxy_property('AcTextAttachmentType', 'TextLeftAttachmentType', AccessMode.ReadWrite)
-    TextLineSpacingDistance = proxy_property(float, 'TextLineSpacingDistance', AccessMode.ReadWrite)
-    TextLineSpacingFactor = proxy_property(float, 'TextLineSpacingFactor', AccessMode.ReadWrite)
-    TextLineSpacingStyle = proxy_property('AcLineSpacingStyle', 'TextLineSpacingStyle', AccessMode.ReadWrite)
-    TextRightAttachmentType = proxy_property('AcTextAttachmentType', 'TextRightAttachmentType', AccessMode.ReadWrite)
-    TextRotation = proxy_property(float, 'TextRotation', AccessMode.ReadWrite)
-    TextString = proxy_property(str, 'TextString', AccessMode.ReadWrite)
-    TextStyleName = proxy_property(str, 'TextStyleName', AccessMode.ReadWrite)
-    TextTopAttachmentType = proxy_property('AcVerticalTextAttachmentType', 'TextTopAttachmentType', AccessMode.ReadWrite)
-    TextWidth = proxy_property(float, 'TextWidth', AccessMode.ReadWrite)
-    Type = proxy_property('AcLeaderType', 'Type', AccessMode.ReadWrite)
+    ArrowheadBlock: str = proxy_property(str, 'ArrowheadBlock', AccessMode.ReadWrite)
+    ArrowheadSize: float = proxy_property(float, 'ArrowheadSize', AccessMode.ReadWrite)
+    ArrowheadType: AcDimArrowheadType = proxy_property('AcDimArrowheadType', 'ArrowheadType', AccessMode.ReadWrite)
+    BlockConnectionType: AcBlockConnectionType = proxy_property('AcBlockConnectionType', 'BlockConnectionType', AccessMode.ReadWrite)
+    BlockScale: float = proxy_property(float, 'BlockScale', AccessMode.ReadWrite)
+    ContentBlockName: str = proxy_property(str, 'ContentBlockName', AccessMode.ReadWrite)
+    ContentBlockType: int = proxy_property(int, 'ContentBlockType', AccessMode.ReadWrite)
+    ContentType: AcMLeaderContentType = proxy_property('AcMLeaderContentType', 'ContentType', AccessMode.ReadWrite)
+    DoglegLength: float = proxy_property(float, 'DoglegLength', AccessMode.ReadWrite)
+    EnableAnnotationScale: bool = proxy_property(bool, 'EnableAnnotationScale', AccessMode.ReadWrite)
+    EnableDogleg: bool = proxy_property(bool, 'EnableDogleg', AccessMode.ReadWrite)
+    EnableFrameText: bool = proxy_property(bool, 'EnableFrameText', AccessMode.ReadWrite)
+    EnableLanding: bool = proxy_property(bool, 'EnableLanding', AccessMode.ReadWrite)
+    LandingGap: float = proxy_property(float, 'LandingGap', AccessMode.ReadWrite)
+    LeaderCount: int = proxy_property(int, 'LeaderCount', AccessMode.ReadOnly)
+    LeaderLineColor: AcadAcCmColor = proxy_property('AcadAcCmColor', 'LeaderLineColor', AccessMode.ReadWrite)
+    LeaderLineType: str = proxy_property(str, 'LeaderLineType', AccessMode.ReadWrite)
+    LeaderLineTypeId: int = proxy_property(int, 'LeaderLineTypeId', AccessMode.ReadWrite)
+    LeaderLineWeight: AcLineWeight = proxy_property('AcLineWeight', 'LeaderLineWeight', AccessMode.ReadWrite)
+    LeaderType: AcLeaderType = proxy_property('AcLeaderType', 'LeaderType', AccessMode.ReadWrite)
+    Scale: float = proxy_property(float, 'Scale', AccessMode.ReadWrite)
+    StyleName: str = proxy_property(str, 'StyleName', AccessMode.ReadWrite)
+    TextAlignmentType: AcTextAlignmentType = proxy_property('AcTextAlignmentType', 'TextAlignmentType', AccessMode.ReadWrite)
+    TextAngleType: int = proxy_property(int, 'TextAngleType', AccessMode.ReadWrite)
+    TextBackgroundFill: bool = proxy_property(bool, 'TextBackgroundFill', AccessMode.ReadWrite)
+    TextColor: AcadAcCmColor = proxy_property('AcadAcCmColor', 'TextColor', AccessMode.ReadWrite)
+    TextDirection: AcDrawingDirection = proxy_property('AcDrawingDirection', 'TextDirection', AccessMode.ReadWrite)
+    TextFrameDisplay: bool = proxy_property(bool, 'TextFrameDisplay', AccessMode.ReadWrite)
+    TextHeight: float = proxy_property(float, 'TextHeight', AccessMode.ReadWrite)
+    TextJustify: AcAttachmentPoint = proxy_property('AcAttachmentPoint', 'TextJustify', AccessMode.ReadWrite)
+    TextLeftAttachmentType: AcTextAttachmentType = proxy_property('AcTextAttachmentType', 'TextLeftAttachmentType', AccessMode.ReadWrite)
+    TextLineSpacingDistance: float = proxy_property(float, 'TextLineSpacingDistance', AccessMode.ReadWrite)
+    TextLineSpacingFactor: float = proxy_property(float, 'TextLineSpacingFactor', AccessMode.ReadWrite)
+    TextLineSpacingStyle: AcLineSpacingStyle = proxy_property('AcLineSpacingStyle', 'TextLineSpacingStyle', AccessMode.ReadWrite)
+    TextRightAttachmentType: AcTextAttachmentType = proxy_property('AcTextAttachmentType', 'TextRightAttachmentType', AccessMode.ReadWrite)
+    TextRotation: float = proxy_property(float, 'TextRotation', AccessMode.ReadWrite)
+    TextString: str = proxy_property(str, 'TextString', AccessMode.ReadWrite)
+    TextStyleName: str = proxy_property(str, 'TextStyleName', AccessMode.ReadWrite)
+    Type: AcMLeaderType = proxy_property('AcMLeaderType', 'Type', AccessMode.ReadWrite)
 
-    def AddLeader(self) -> AcadLeader:
-        return AcadLeader(self._obj.AddLeader())
+    def AddLeader(self) -> int:
+        return self._obj.AddLeader()
 
-    def AddLeaderLine(self, leaderIndex: int, pointArray: PyGePoint3dArray) -> int:
-        return self._obj.AddLeaderLine(leaderIndex, pointArray())
+    def AddLeaderLine(self, leaderIndex: int) -> int:
+        return self._obj.AddLeaderLine(leaderIndex)
 
-    def AddLeaderLineEx(self, pointArray: PyGePoint3dArray) -> int:
-        return self._obj.AddLeaderLineEx(pointArray())
-
-    def Evaluate(self) -> None:
-        self._obj.Evaluate()
+    def AddLeaderLineEx(self, point: PyGePoint3d) -> int:
+        return self._obj.AddLeaderLineEx(point())
 
     def GetBlockAttributeValue(self, attdefId: int) -> str:
         return self._obj.GetBlockAttributeValue(attdefId)
@@ -71,11 +82,14 @@ class AcadMLeader(AcadEntity):
     def GetLeaderIndex(self, leaderLineIndex: int) -> int:
         return self._obj.GetLeaderIndex(leaderLineIndex)
 
-    def GetLeaderLineIndexes(self, leaderIndex: int) -> vDoubleArray:
-        return vDoubleArray(self._obj.GetLeaderLineIndexes(leaderIndex))
+    def GetLeaderLineIndexes(self, leaderIndex: int) -> list:
+        return list(self._obj.GetLeaderLineIndexes(leaderIndex))
 
-    def GetLeaderLineVertices(self, leaderLineIndex: int) -> PyGePoint3dArray:
-        return PyGePoint3dArray(self._obj.GetLeaderLineVertices(leaderLineIndex))
+    def GetLeaderLineVertices(self, leaderLineIndex: int) -> list:
+        return list(self._obj.GetLeaderLineVertices(leaderLineIndex))
+
+    def GetTextFrameDisplay(self) -> bool:
+        return self._obj.GetTextFrameDisplay()
 
     def GetVertexCount(self, leaderLineIndex: int) -> int:
         return self._obj.GetVertexCount(leaderLineIndex)
@@ -89,8 +103,11 @@ class AcadMLeader(AcadEntity):
     def SetBlockAttributeValue(self, attdefId: int, value: str) -> None:
         self._obj.SetBlockAttributeValue(attdefId, value)
 
-    def SetDoglegDirection(self, leaderIndex: int, dirVec: vDoubleArray) -> None:
-        self._obj.SetDoglegDirection(leaderIndex, dirVec())
+    def SetDoglegDirection(self, leaderIndex: int, dir: PyGeVector3d) -> None:
+        self._obj.SetDoglegDirection(leaderIndex, dir())
 
-    def SetLeaderLineVertices(self, leaderLineIndex: int, pointArray: PyGePoint3dArray) -> None:
-        self._obj.SetLeaderLineVertices(leaderLineIndex, pointArray())
+    def SetLeaderLineVertices(self, leaderLineIndex: int, vertices) -> None:
+        self._obj.SetLeaderLineVertices(leaderLineIndex, vertices)
+
+    def SetTextFrameDisplay(self, display: bool) -> None:
+        self._obj.SetTextFrameDisplay(display)
