@@ -2,10 +2,24 @@ from __future__ import annotations
 
 from ..Proxy import proxy_property, AccessMode
 from .AcadDimension import AcadDimension
+from ...Types.Ac import (
+    AcDimPrecision,
+    AcDimUnits,
+    AcColor,
+    AcLineWeight,
+    AcDimFit,
+    AcDimFractionType,
+    AcDimHorizontalJustification,
+    AcDimToleranceMethod,
+    AcDimToleranceJustify,
+    AcDimLUnits,
+    AcDimCenterType,
+)
 
 
 class AcadDimRadial(AcadDimension):
-    def __init__(self, obj) -> None: super().__init__(obj)
+    def __init__(self, obj) -> None:
+        super().__init__(obj)
 
     AltRoundDistance: float = proxy_property(float, 'AltRoundDistance', AccessMode.ReadWrite)
     AltSuppressLeadingZeros: bool = proxy_property(bool, 'AltSuppressLeadingZeros', AccessMode.ReadWrite)
