@@ -10,7 +10,7 @@ from __future__ import annotations
 import importlib
 import sys
 from enum import IntEnum
-from typing import Any, Optional
+from typing import Any, Optional, TypeVar, Generic, overload
 
 from ..Utils.retry_com import execute_com_call
 
@@ -105,8 +105,18 @@ def _unwrap_for_com(value: Any) -> Any:
     return value
 
 
-class proxy_property:
-    """Дескриптор свойства COM с retry и ленивым приведением типа."""
+T = TypeVar('T')
+
+
+class proxy_property(Generic[T]):
+    """Дескриптор свойства COM с retry и ленивым приведением типа.
+
+    Использование с аннотацией (рекомендуется)::
+
+        ActiveDocument: AcadDocument = proxy_property(
+            'AcadDocument', 'ActiveDocument', AccessMode.ReadOnly
+        )
+    """
 
     def __init__(self, rettype: Any, propertyName: str, mode: AccessMode):
         self.rettype_name: Optional[str] = rettype if isinstance(rettype, str) else None
@@ -127,7 +137,7 @@ class proxy_property:
                 return getattr(owner, self.rettype_name, None)
         return self.rettype
 
-    def __get__(self, instance, owner):
+    def __get__(self, instance, owner) -> T:
         if self.mode is AccessMode.WriteOnly:
             raise Exception(f"Свойство '{self.propertyName}' доступно только для записи.")
         if self.mode is AccessMode.DenyFromAll:
@@ -152,7 +162,7 @@ class proxy_property:
         except Exception:
             return value
 
-    def __set__(self, instance, value):
+    def __set__(self, instance, value: T) -> None:
         if self.mode is AccessMode.ReadOnly:
             raise AttributeError(f"Свойство '{self.propertyName}' доступно только для чтения.")
         if self.mode is AccessMode.DenyFromAll:
