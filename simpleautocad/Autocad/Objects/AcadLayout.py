@@ -8,5 +8,5 @@ class AcadLayout(AcadPlotConfiguration):
     def __init__(self, obj) -> None:
         super().__init__(obj)
 
-    Block = proxy_property('AcadBlock', 'Block', AccessMode.ReadOnly)
-    TabOrder = proxy_property(int, 'TabOrder', AccessMode.ReadWrite)
+    Block: AcadBlock = proxy_property('AcadBlock', 'Block', AccessMode.ReadOnly)
+    TabOrder: int = proxy_property(int, 'TabOrder', AccessMode.ReadWrite)

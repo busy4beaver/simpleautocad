@@ -8,4 +8,4 @@ class AcadSectionSettings(AcadObject):
     def __init__(self, obj) -> None:
         super().__init__(obj)
 
-    CurrentSectionType = proxy_property('AcSectionType', 'CurrentSectionType', AccessMode.ReadWrite)
+    CurrentSectionType: AcSectionType = proxy_property('AcSectionType', 'CurrentSectionType', AccessMode.ReadWrite)

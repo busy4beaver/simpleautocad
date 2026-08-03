@@ -8,4 +8,4 @@ class AcadSubEntSolidFace(AcadSubEntity):
     def __init__(self, obj) -> None:
         super().__init__(obj)
 
-    Material = proxy_property(str, 'Material', AccessMode.ReadWrite)
+    Material: str = proxy_property(str, 'Material', AccessMode.ReadWrite)
