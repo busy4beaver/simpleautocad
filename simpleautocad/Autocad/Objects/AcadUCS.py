@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from ..Proxy import proxy_property, AccessMode
 from ..AcadObject import AcadObject
-from ...Types.Ge import PyGePoint3d, PyGeVector3d
 
 
 class AcadUCS(AcadObject):
@@ -13,3 +12,6 @@ class AcadUCS(AcadObject):
     Origin: PyGePoint3d = proxy_property('PyGePoint3d', 'Origin', AccessMode.ReadWrite)
     XVector: PyGeVector3d = proxy_property('PyGeVector3d', 'XVector', AccessMode.ReadWrite)
     YVector: PyGeVector3d = proxy_property('PyGeVector3d', 'YVector', AccessMode.ReadWrite)
+
+    def GetUCSMatrix(self) -> PyGeMatrix3d:
+        return PyGeMatrix3d(self._obj.GetUCSMatrix())

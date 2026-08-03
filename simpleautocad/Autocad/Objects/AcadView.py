@@ -14,7 +14,7 @@ class AcadView(AcadObject):
     HasVpAssociation: bool = proxy_property(bool, 'HasVpAssociation', AccessMode.ReadWrite)
     Height: float = proxy_property(float, 'Height', AccessMode.ReadWrite)
     LayerState: str = proxy_property(str, 'LayerState', AccessMode.ReadWrite)
-    LayoutID: int = proxy_property(int, 'LayoutID', AccessMode.ReadOnly)
+    LayoutId: int = proxy_property(int, 'LayoutId', AccessMode.ReadWrite)
     Name: str = proxy_property(str, 'Name', AccessMode.ReadWrite)
     Target: PyGePoint3d = proxy_property('PyGePoint3d', 'Target', AccessMode.ReadWrite)
     Width: float = proxy_property(float, 'Width', AccessMode.ReadWrite)
