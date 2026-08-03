@@ -5,10 +5,9 @@ from ..AcadEntity import AcadEntity
 from ...Types.Ge import PyGePoint3d, PyGeVector3d
 from ...Types.Ac import (
     AcColor,
-    AcDimTextFill,
     AcDimTextMovement,
-    AcDimTolerance,
     AcDimToleranceMethod,
+    AcDimToleranceJustify,
     AcDimPrecision,
     AcDimVerticalJustification,
 )
@@ -27,7 +26,7 @@ class AcadDimension(AcadEntity):
     SuppressLeadingZeros: bool = proxy_property(bool, 'SuppressLeadingZeros', AccessMode.ReadWrite)
     SuppressTrailingZeros: bool = proxy_property(bool, 'SuppressTrailingZeros', AccessMode.ReadWrite)
     TextColor: AcColor = proxy_property('AcColor', 'TextColor', AccessMode.ReadWrite)
-    TextFill: AcDimTextFill = proxy_property('AcDimTextFill', 'TextFill', AccessMode.ReadWrite)
+    TextFill: int = proxy_property(int, 'TextFill', AccessMode.ReadWrite)
     TextFillColor: AcColor = proxy_property('AcColor', 'TextFillColor', AccessMode.ReadWrite)
     TextGap: float = proxy_property(float, 'TextGap', AccessMode.ReadWrite)
     TextHeight: float = proxy_property(float, 'TextHeight', AccessMode.ReadWrite)
@@ -38,9 +37,9 @@ class AcadDimension(AcadEntity):
     TextRotation: float = proxy_property(float, 'TextRotation', AccessMode.ReadWrite)
     TextStyle: str = proxy_property(str, 'TextStyle', AccessMode.ReadWrite)
     TextSuffix: str = proxy_property(str, 'TextSuffix', AccessMode.ReadWrite)
-    ToleranceDisplay: AcDimTolerance = proxy_property('AcDimTolerance', 'ToleranceDisplay', AccessMode.ReadWrite)
+    ToleranceDisplay: AcDimToleranceMethod = proxy_property('AcDimToleranceMethod', 'ToleranceDisplay', AccessMode.ReadWrite)
     ToleranceHeightScale: float = proxy_property(float, 'ToleranceHeightScale', AccessMode.ReadWrite)
-    ToleranceJustification: AcDimToleranceMethod = proxy_property('AcDimToleranceMethod', 'ToleranceJustification', AccessMode.ReadWrite)
+    ToleranceJustification: AcDimToleranceJustify = proxy_property('AcDimToleranceJustify', 'ToleranceJustification', AccessMode.ReadWrite)
     ToleranceLowerLimit: float = proxy_property(float, 'ToleranceLowerLimit', AccessMode.ReadWrite)
     TolerancePrecision: AcDimPrecision = proxy_property('AcDimPrecision', 'TolerancePrecision', AccessMode.ReadWrite)
     ToleranceSuppressLeadingZeros: bool = proxy_property(bool, 'ToleranceSuppressLeadingZeros', AccessMode.ReadWrite)
