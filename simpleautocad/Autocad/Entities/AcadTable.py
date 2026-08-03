@@ -1,8 +1,9 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from ..Proxy import proxy_property, AccessMode
 from ..AcadEntity import AcadEntity
-from ..Objects.AcadAcCmColor import AcadAcCmColor
 from ...Types.Ge import PyGePoint3d, PyGeVector3d
 from ...Types.VarType import Variant, vIntegerArray
 from ...Types.Ac import (
@@ -26,7 +27,13 @@ from ...Types.Ac import (
     AcParseOption,
     AcSelectType,
     AcCellOption,
+    AcTableDirection,
+    AcTableFlowDirection,
+    AcTableStyleOverrides,
 )
+
+if TYPE_CHECKING:
+    from ..Objects.AcadAcCmColor import AcadAcCmColor
 
 
 class AcadTable(AcadEntity):
@@ -107,6 +114,7 @@ class AcadTable(AcadEntity):
         return self._obj.GetAutoScale2(nRow, nCol, nContent)
 
     def GetBackgroundColor(self, rowType: AcRowType) -> AcadAcCmColor:
+        from ..Objects.AcadAcCmColor import AcadAcCmColor
         return AcadAcCmColor(self._obj.GetBackgroundColor(rowType))
 
     def GetBackgroundColorNone(self, rowType: AcRowType) -> bool:
@@ -137,12 +145,14 @@ class AcadTable(AcadEntity):
         return AcCellAlignment(self._obj.GetCellAlignment(row, col))
 
     def GetCellBackgroundColor(self, row: int, col: int) -> AcadAcCmColor:
+        from ..Objects.AcadAcCmColor import AcadAcCmColor
         return AcadAcCmColor(self._obj.GetCellBackgroundColor(row, col))
 
     def GetCellBackgroundColorNone(self, row: int, col: int) -> bool:
         return self._obj.GetCellBackgroundColorNone(row, col)
 
     def GetCellContentColor(self, row: int, col: int) -> AcadAcCmColor:
+        from ..Objects.AcadAcCmColor import AcadAcCmColor
         return AcadAcCmColor(self._obj.GetCellContentColor(row, col))
 
     def GetCellDataType(self, row: int, col: int, pDataType: AcValueDataType, pUnitType: AcValueUnitType) -> None:
@@ -155,6 +165,7 @@ class AcadTable(AcadEntity):
         return self._obj.GetCellFormat(row, col)
 
     def GetCellGridColor(self, row: int, col: int, edge: AcCellEdgeMask) -> AcadAcCmColor:
+        from ..Objects.AcadAcCmColor import AcadAcCmColor
         return AcadAcCmColor(self._obj.GetCellGridColor(row, col, edge))
 
     def GetCellGridLineWeight(self, row: int, col: int, edge: AcCellEdgeMask) -> AcLineWeight:
@@ -191,9 +202,11 @@ class AcadTable(AcadEntity):
         return self._obj.GetColumnWidth(col)
 
     def GetContentColor(self, rowType: AcRowType) -> AcadAcCmColor:
+        from ..Objects.AcadAcCmColor import AcadAcCmColor
         return AcadAcCmColor(self._obj.GetContentColor(rowType))
 
     def GetCellContentColor2(self, nRow: int, nCol: int, nContent: int) -> AcadAcCmColor:
+        from ..Objects.AcadAcCmColor import AcadAcCmColor
         return AcadAcCmColor(self._obj.GetCellContentColor2(nRow, nCol, nContent))
 
     def GetContentLayout(self, nRow: int, nCol: int) -> AcCellContentLayout:
@@ -229,9 +242,11 @@ class AcadTable(AcadEntity):
         return self._obj.GetFormula(nRow, nCol, nContent)
 
     def GetGridColor(self, gridLineType: AcGridLineType, rowType: AcRowType) -> AcadAcCmColor:
+        from ..Objects.AcadAcCmColor import AcadAcCmColor
         return AcadAcCmColor(self._obj.GetGridColor(gridLineType, rowType))
 
     def GetGridColor2(self, nRow: int, nCol: int, nGridLineType: AcGridLineType) -> AcadAcCmColor:
+        from ..Objects.AcadAcCmColor import AcadAcCmColor
         return AcadAcCmColor(self._obj.GetGridColor2(nRow, nCol, nGridLineType))
 
     def GetGridDoubleLineSpacing(self, nRow: int, nCol: int, nGridLineType: AcGridLineType) -> float:
