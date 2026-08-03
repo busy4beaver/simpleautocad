@@ -1,8 +1,15 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from ..Proxy import proxy_property, AccessMode
 from ..Base import AppObject
 from ...Types.Ge import PyGeVector3d
+from ...Types.Ac import AcLineWeight
+
+if TYPE_CHECKING:
+    from .AcadAcCmColor import AcadAcCmColor
+    from .AcadHyperlinks import AcadHyperlinks
 
 
 class AcadSubEntity(AppObject):
