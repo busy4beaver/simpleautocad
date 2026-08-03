@@ -2,15 +2,13 @@ from __future__ import annotations
 
 from ..Proxy import proxy_property, AccessMode
 from .AcadSurface import AcadSurface
+from ...Types.Ge import PyGeVector3d
 
 
 class AcadExtrudedSurface(AcadSurface):
     def __init__(self, obj) -> None:
         super().__init__(obj)
 
-    Direction = proxy_property('PyGeVector3d', 'Direction', AccessMode.ReadWrite)
-    Height = proxy_property(float, 'Height', AccessMode.ReadWrite)
-    TaperAngle = proxy_property(float, 'TaperAngle', AccessMode.ReadWrite)
-
-    def Copy(self) -> AcadExtrudedSurface:
-        return AcadExtrudedSurface(self._obj.Copy())
+    Direction: PyGeVector3d = proxy_property('PyGeVector3d', 'Direction', AccessMode.ReadOnly)
+    Height: float = proxy_property(float, 'Height', AccessMode.ReadWrite)
+    TaperAngle: float = proxy_property(float, 'TaperAngle', AccessMode.ReadWrite)
