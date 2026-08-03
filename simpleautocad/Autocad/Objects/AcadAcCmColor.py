@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from ..Base import AppObject
 from ..Proxy import proxy_property, AccessMode
+from ...Types.Ac import AcColor, AcColorMethod
 
 
 class AcadAcCmColor(AppObject):
