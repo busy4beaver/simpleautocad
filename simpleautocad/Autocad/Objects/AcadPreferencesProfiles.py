@@ -8,8 +8,8 @@ class AcadPreferencesProfiles(AppObject):
     def __init__(self, obj) -> None:
         super().__init__(obj)
 
-    ActiveProfile = proxy_property(str, 'ActiveProfile', AccessMode.ReadOnly)
-    Application = proxy_property('AcadApplication', 'Application', AccessMode.ReadOnly)
+    ActiveProfile: str = proxy_property(str, 'ActiveProfile', AccessMode.ReadOnly)
+    Application: AcadApplication = proxy_property('AcadApplication', 'Application', AccessMode.ReadOnly)
 
     def CopyProfile(self, oldProfileName: str, newProfileName: str) -> None:
         self._obj.CopyProfile(oldProfileName, newProfileName)

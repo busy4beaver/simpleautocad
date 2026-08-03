@@ -10,14 +10,14 @@ class AcadPolygonMesh(AcadEntity):
     def __init__(self, obj) -> None:
         super().__init__(obj)
 
-    Coordinates = proxy_property('PyGePoint3dArray', 'Coordinates', AccessMode.ReadWrite)
-    MClose = proxy_property(bool, 'MClose', AccessMode.ReadWrite)
-    MDensity = proxy_property(int, 'MDensity', AccessMode.ReadWrite)
-    MVertexCount = proxy_property(int, 'MVertexCount', AccessMode.ReadOnly)
-    NClose = proxy_property(bool, 'NClose', AccessMode.ReadWrite)
-    NDensity = proxy_property(int, 'NDensity', AccessMode.ReadWrite)
-    NVertexCount = proxy_property(int, 'NVertexCount', AccessMode.ReadOnly)
-    Type = proxy_property('AcPolymeshType', 'Type', AccessMode.ReadWrite)
+    Coordinates: PyGePoint3dArray = proxy_property('PyGePoint3dArray', 'Coordinates', AccessMode.ReadWrite)
+    MClose: bool = proxy_property(bool, 'MClose', AccessMode.ReadWrite)
+    MDensity: int = proxy_property(int, 'MDensity', AccessMode.ReadWrite)
+    MVertexCount: int = proxy_property(int, 'MVertexCount', AccessMode.ReadOnly)
+    NClose: bool = proxy_property(bool, 'NClose', AccessMode.ReadWrite)
+    NDensity: int = proxy_property(int, 'NDensity', AccessMode.ReadWrite)
+    NVertexCount: int = proxy_property(int, 'NVertexCount', AccessMode.ReadOnly)
+    Type: AcPolymeshType = proxy_property('AcPolymeshType', 'Type', AccessMode.ReadWrite)
 
     def Coordinate(self, Index: int) -> PyGePoint3d:
         return PyGePoint3d(self._obj.Coordinate(Index))

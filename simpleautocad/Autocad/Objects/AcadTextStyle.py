@@ -8,14 +8,14 @@ class AcadTextStyle(AcadObject):
     def __init__(self, obj) -> None:
         super().__init__(obj)
 
-    BigFontFile = proxy_property(str, 'BigFontFile', AccessMode.ReadWrite)
-    FontFile = proxy_property(str, 'FontFile', AccessMode.ReadWrite)
-    Height = proxy_property(float, 'Height', AccessMode.ReadWrite)
-    LastHeight = proxy_property(float, 'LastHeight', AccessMode.ReadWrite)
-    Name = proxy_property(str, 'Name', AccessMode.ReadOnly)
-    ObliqueAngle = proxy_property(float, 'ObliqueAngle', AccessMode.ReadWrite)
-    TextGenerationFlag = proxy_property('AcTextGenerationFlag', 'TextGenerationFlag', AccessMode.ReadWrite)
-    Width = proxy_property(float, 'Width', AccessMode.ReadWrite)
+    BigFontFile: str = proxy_property(str, 'BigFontFile', AccessMode.ReadWrite)
+    FontFile: str = proxy_property(str, 'FontFile', AccessMode.ReadWrite)
+    Height: float = proxy_property(float, 'Height', AccessMode.ReadWrite)
+    LastHeight: float = proxy_property(float, 'LastHeight', AccessMode.ReadWrite)
+    Name: str = proxy_property(str, 'Name', AccessMode.ReadOnly)
+    ObliqueAngle: float = proxy_property(float, 'ObliqueAngle', AccessMode.ReadWrite)
+    TextGenerationFlag: AcTextGenerationFlag = proxy_property('AcTextGenerationFlag', 'TextGenerationFlag', AccessMode.ReadWrite)
+    Width: float = proxy_property(float, 'Width', AccessMode.ReadWrite)
 
     def GetFont(self) -> tuple:
         Typeface, Bold, Italic, CharSet, PitchAndFamily = self._obj.GetFont()
