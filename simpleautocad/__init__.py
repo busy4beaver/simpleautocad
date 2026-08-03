@@ -25,7 +25,6 @@ __all__ = [
     'AcadBlock',
     'AcadBlocks',
     'AcadDatabase',
-    'IAcadDatabase',
     'AcadDatabasePreferences',
     'AcadDictionaries',
     'AcadDictionary',

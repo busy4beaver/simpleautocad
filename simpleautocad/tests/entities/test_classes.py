@@ -105,7 +105,7 @@ def test_AcadDocument(acad_active_document:AcadDocument):
     vp.Direction = PyGeVector3d(1,1,1)
     prop_test(doc, 'ActiveViewport', AcadViewport, AccessMode.ReadWrite, vp)
     prop_test(doc, 'Application', AcadApplication, AccessMode.ReadOnly)
-    prop_test(doc, 'Database', IAcadDatabase, AccessMode.ReadOnly)
+    prop_test(doc, 'Database', AcadDatabase, AccessMode.ReadOnly)
     prop_test(doc, 'FullName', str, AccessMode.ReadOnly)
     prop_test(doc, 'Height', float, AccessMode.ReadWrite)
     prop_test(doc, 'HWND', int, AccessMode.ReadOnly)

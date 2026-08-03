@@ -2,7 +2,7 @@ from .AcadAcCmColor import AcadAcCmColor
 from .AcadApplication import AcadApplication
 from .AcadBlock import AcadBlock
 from .AcadBlocks import AcadBlocks
-from .AcadDatabase import AcadDatabase, IAcadDatabase
+from .AcadDatabase import AcadDatabase
 from .AcadDatabasePreferences import AcadDatabasePreferences
 from .AcadDictionaries import AcadDictionaries
 from .AcadDictionary import AcadDictionary
@@ -84,7 +84,7 @@ from .AcadXRecord import AcadXRecord
 
 __all__ = [
     'AcadAcCmColor', 'AcadApplication', 'AcadBlock', 'AcadBlocks', 'AcadDatabase',
-    'IAcadDatabase', 'AcadDatabasePreferences', 'AcadDictionaries', 'AcadDictionary',
+    'AcadDatabasePreferences', 'AcadDictionaries', 'AcadDictionary',
     'AcadDimStyle', 'AcadDimStyles', 'AcadDocument', 'AcadDocuments',
     'AcadDynamicBlockReferenceProperty', 'AcadGroup', 'AcadGroups', 'AcadHyperlink',
     'AcadHyperlinks', 'AcadIDPair', 'AcadLayer', 'AcadLayers', 'AcadLayerStateManager',

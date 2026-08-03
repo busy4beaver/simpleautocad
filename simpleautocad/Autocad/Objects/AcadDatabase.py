@@ -63,6 +63,3 @@ class AcadDatabase(AcadObject):
 
     def ObjectIdToObject(self, ObjectID: int) -> AcadObject:
         return AcadObject(self._obj.ObjectIdToObject(ObjectID))
-
-
-IAcadDatabase = AcadDatabase
