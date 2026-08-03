@@ -1,7 +1,12 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from ..Proxy import proxy_property, AccessMode
 from .AcadPlotConfiguration import AcadPlotConfiguration
+
+if TYPE_CHECKING:
+    from .AcadBlock import AcadBlock
 
 
 class AcadLayout(AcadPlotConfiguration):

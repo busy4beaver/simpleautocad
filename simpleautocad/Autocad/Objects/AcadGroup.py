@@ -1,8 +1,14 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from ..Proxy import proxy_property, AccessMode
 from ..AcadObject import IAcadObjectCollection
 from ...Types.VarType import vObjectArray
+from ...Types.Ac import AcLineWeight
+
+if TYPE_CHECKING:
+    from .AcadAcCmColor import AcadAcCmColor
 
 
 class AcadGroup(IAcadObjectCollection):

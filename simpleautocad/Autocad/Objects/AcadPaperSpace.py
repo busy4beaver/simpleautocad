@@ -1,7 +1,12 @@
 from __future__ import annotations
 
-from ..Proxy import proxy_property, AccessMode
+from typing import TYPE_CHECKING
+
 from .AcadBlock import AcadBlock
+from ...Types.Ge import PyGePoint3d
+
+if TYPE_CHECKING:
+    from ..Entities.AcadPViewport import AcadPViewport
 
 
 class AcadPaperSpace(AcadBlock):
@@ -9,4 +14,5 @@ class AcadPaperSpace(AcadBlock):
         super().__init__(obj)
 
     def AddPViewport(self, Center: PyGePoint3d, Width: float, Height: float) -> AcadPViewport:
+        from ..Entities.AcadPViewport import AcadPViewport
         return AcadPViewport(self._obj.AddPViewport(Center(), Width, Height))
