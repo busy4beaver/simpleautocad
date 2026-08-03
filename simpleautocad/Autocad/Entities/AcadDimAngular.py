@@ -2,10 +2,21 @@ from __future__ import annotations
 
 from ..Proxy import proxy_property, AccessMode
 from .AcadDimension import AcadDimension
+from ...Types.Ac import (
+    AcAngleUnits,
+    AcColor,
+    AcLineWeight,
+    AcDimFit,
+    AcDimHorizontalJustification,
+    AcDimToleranceMethod,
+    AcDimToleranceJustify,
+    AcDimPrecision,
+)
 
 
 class AcadDimAngular(AcadDimension):
-    def __init__(self, obj) -> None: super().__init__(obj)
+    def __init__(self, obj) -> None:
+        super().__init__(obj)
 
     AngleFormat: AcAngleUnits = proxy_property('AcAngleUnits', 'AngleFormat', AccessMode.ReadWrite)
     DimensionLineColor: AcColor = proxy_property('AcColor', 'DimensionLineColor', AccessMode.ReadWrite)

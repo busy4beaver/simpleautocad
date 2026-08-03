@@ -1,7 +1,14 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from ..Proxy import proxy_property, AccessMode
 from ..AcadEntity import AcadEntity
+from ...Types.Ge import PyGePoint3d, PyGeVector3d
+from ...Types.Ac import AcShadePlot, AcViewportScale, AcStandardScale
+
+if TYPE_CHECKING:
+    from ..Objects.AcadView import AcadView
 
 
 class AcadPViewport(AcadEntity):
