@@ -1,7 +1,13 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from ..Base import AppObject
 from ..Proxy import proxy_property, AccessMode
+from ...Types.Ac import AcAlignmentPointAcquisition, AcColor
+
+if TYPE_CHECKING:
+    from .AcadApplication import AcadApplication
 
 
 class AcadPreferencesDrafting(AppObject):
