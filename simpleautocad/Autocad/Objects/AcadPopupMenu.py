@@ -9,14 +9,14 @@ class AcadPopupMenu(AppObject):
     def __init__(self, obj) -> None:
         super().__init__(obj)
 
-    Application = proxy_property('AcadApplication', 'Application', AccessMode.ReadOnly)
-    Count = proxy_property(int, 'Count', AccessMode.ReadOnly)
-    Name = proxy_property(str, 'Name', AccessMode.ReadWrite)
-    NameNoMnemonic = proxy_property(str, 'NameNoMnemonic', AccessMode.ReadOnly)
-    OnMenuBar = proxy_property(bool, 'OnMenuBar', AccessMode.ReadOnly)
-    Parent = proxy_property('AppObject', 'Parent', AccessMode.ReadWrite)
-    ShortcutMenu = proxy_property(bool, 'ShortcutMenu', AccessMode.ReadWrite)
-    TagString = proxy_property(str, 'TagString', AccessMode.ReadOnly)
+    Application: AcadApplication = proxy_property('AcadApplication', 'Application', AccessMode.ReadOnly)
+    Count: int = proxy_property(int, 'Count', AccessMode.ReadOnly)
+    Name: str = proxy_property(str, 'Name', AccessMode.ReadWrite)
+    NameNoMnemonic: str = proxy_property(str, 'NameNoMnemonic', AccessMode.ReadOnly)
+    OnMenuBar: bool = proxy_property(bool, 'OnMenuBar', AccessMode.ReadOnly)
+    Parent: AppObject = proxy_property('AppObject', 'Parent', AccessMode.ReadWrite)
+    ShortcutMenu: bool = proxy_property(bool, 'ShortcutMenu', AccessMode.ReadWrite)
+    TagString: str = proxy_property(str, 'TagString', AccessMode.ReadOnly)
 
     def AddMenuItem(self, Index: int | str, Label: str, Macro: str) -> AcadPopupMenuItem:
         return AcadPopupMenuItem(self._obj.AddMenuItem(Index, Label, Macro))
