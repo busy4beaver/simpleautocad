@@ -2,6 +2,13 @@ from __future__ import annotations
 
 from ..Proxy import proxy_property, AccessMode
 from ..AcadObject import AcadObject
+from ...Types.Ge import PyGePoint2d
+from ...Types.Ac import (
+    AcPlotPaperUnits,
+    AcPlotRotation,
+    AcPlotType,
+    AcPlotScale,
+)
 
 
 class AcadPlotConfiguration(AcadObject):
