@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from win32com.client import CDispatch
 from pythoncom import com_error
 
@@ -17,6 +19,13 @@ from ...Utils.retry_com import retry_com
 from ...Types.Ge import PyGePoint3d
 from ...Types.VarType import vStringArray
 from .AcadState import AcadState
+
+if TYPE_CHECKING:
+    from .AcadDocument import AcadDocument
+    from .AcadDocuments import AcadDocuments
+    from .AcadMenuBar import AcadMenuBar
+    from .AcadMenuGroups import AcadMenuGroups
+    from .AcadPreferences import AcadPreferences
 
 
 class AcadApplication(Application, AppObject):
