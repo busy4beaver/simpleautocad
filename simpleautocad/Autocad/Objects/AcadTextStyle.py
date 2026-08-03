@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from ..Proxy import proxy_property, AccessMode
 from ..AcadObject import AcadObject
+from ...Types.Ac import AcTextGenerationFlag
 
 
 class AcadTextStyle(AcadObject):
