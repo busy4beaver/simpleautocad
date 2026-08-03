@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 from ..Proxy import proxy_property, AccessMode
 from ..AcadEntity import AcadEntity
 from ...Types.Ge import PyGePoint3d, PyGeVector3d
-from ...Types.Ac import AcShadePlot, AcViewportScale, AcStandardScale
+from ...Types.Ac import AcShadePlot, AcViewportScale
 
 if TYPE_CHECKING:
     from ..Objects.AcadView import AcadView
@@ -29,7 +29,7 @@ class AcadPViewport(AcadEntity):
     ShadePlot: AcShadePlot = proxy_property('AcShadePlot', 'ShadePlot', AccessMode.ReadWrite)
     SheetView: AcadView = proxy_property('AcadView', 'SheetView', AccessMode.ReadWrite)
     StandardScale: AcViewportScale = proxy_property('AcViewportScale', 'StandardScale', AccessMode.ReadWrite)
-    StandardScale2: AcStandardScale = proxy_property('AcStandardScale', 'StandardScale2', AccessMode.ReadWrite)
+    StandardScale2: AcViewportScale = proxy_property('AcViewportScale', 'StandardScale2', AccessMode.ReadWrite)
     Target: PyGePoint3d = proxy_property('PyGePoint3d', 'Target', AccessMode.ReadWrite)
     TwistAngle: float = proxy_property(float, 'TwistAngle', AccessMode.ReadWrite)
     UCSIconAtOrigin: bool = proxy_property(bool, 'UCSIconAtOrigin', AccessMode.ReadWrite)
