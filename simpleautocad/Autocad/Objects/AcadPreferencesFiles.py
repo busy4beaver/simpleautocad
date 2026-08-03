@@ -1,7 +1,12 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from ..Proxy import proxy_property, AccessMode
 from ..AcadObject import AcadObject
+
+if TYPE_CHECKING:
+    from .AcadApplication import AcadApplication
 
 
 class AcadPreferencesFiles(AcadObject):

@@ -1,7 +1,13 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from ..Base import AppObject
 from ..Proxy import proxy_property, AccessMode
+from ...Types.Ac import AcARXDemandLoad, AcProxyImage, AcSaveAsType, AcXRefDemandLoad
+
+if TYPE_CHECKING:
+    from .AcadApplication import AcadApplication
 
 
 class AcadPreferencesOpenSave(AppObject):
@@ -20,6 +26,6 @@ class AcadPreferencesOpenSave(AppObject):
     ProxyImage: AcProxyImage = proxy_property('AcProxyImage', 'ProxyImage', AccessMode.ReadWrite)
     SaveAsType: AcSaveAsType = proxy_property('AcSaveAsType', 'SaveAsType', AccessMode.ReadWrite)
     SavePreviewThumbnail: bool = proxy_property(bool, 'SavePreviewThumbnail', AccessMode.ReadWrite)
-    ShowProxyDialogBox: bool = proxy_property(bool, 'ShowProxyDialogBox', AccessMode.ReadWrite)
     TempFileExtension: str = proxy_property(str, 'TempFileExtension', AccessMode.ReadWrite)
+    ShowProxyDialogBox: bool = proxy_property(bool, 'ShowProxyDialogBox', AccessMode.ReadWrite)
     XRefDemandLoad: AcXRefDemandLoad = proxy_property('AcXRefDemandLoad', 'XRefDemandLoad', AccessMode.ReadWrite)
