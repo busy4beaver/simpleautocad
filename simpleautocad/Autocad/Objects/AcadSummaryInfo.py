@@ -9,14 +9,14 @@ class AcadSummaryInfo(AppObject):
     def __init__(self, obj) -> None:
         super().__init__(obj)
 
-    Author = proxy_property(str, 'Author', AccessMode.ReadWrite)
-    Comments = proxy_property(str, 'Comments', AccessMode.ReadWrite)
-    HyperlinkBase = proxy_property(str, 'HyperlinkBase', AccessMode.ReadWrite)
-    Keywords = proxy_property(str, 'Keywords', AccessMode.ReadWrite)
-    LastSavedBy = proxy_property(str, 'LastSavedBy', AccessMode.ReadWrite)
-    RevisionNumber = proxy_property(str, 'RevisionNumber', AccessMode.ReadWrite)
-    Subject = proxy_property(str, 'Subject', AccessMode.ReadWrite)
-    Title = proxy_property(str, 'Title', AccessMode.ReadWrite)
+    Author: str = proxy_property(str, 'Author', AccessMode.ReadWrite)
+    Comments: str = proxy_property(str, 'Comments', AccessMode.ReadWrite)
+    HyperlinkBase: str = proxy_property(str, 'HyperlinkBase', AccessMode.ReadWrite)
+    Keywords: str = proxy_property(str, 'Keywords', AccessMode.ReadWrite)
+    LastSavedBy: str = proxy_property(str, 'LastSavedBy', AccessMode.ReadWrite)
+    RevisionNumber: str = proxy_property(str, 'RevisionNumber', AccessMode.ReadWrite)
+    Subject: str = proxy_property(str, 'Subject', AccessMode.ReadWrite)
+    Title: str = proxy_property(str, 'Title', AccessMode.ReadWrite)
 
     def AddCustomInfo(self, key: str, Value: str) -> None:
         self._obj.AddCustomInfo(key, Value)
