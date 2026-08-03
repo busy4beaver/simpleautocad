@@ -11,13 +11,13 @@ class IAcadObject(AppObject):
     def __init__(self, obj) -> None:
         super().__init__(obj)
 
-    Application = proxy_property('AcadApplication', 'Application', AccessMode.ReadOnly)
-    Document = proxy_property('AcadDocument', 'Document', AccessMode.ReadOnly)
-    Handle = proxy_property(str, 'Handle', AccessMode.ReadOnly)
-    HasExtensionDictionary = proxy_property(bool, 'HasExtensionDictionary', AccessMode.ReadOnly)
-    ObjectName = proxy_property(str, 'ObjectName', AccessMode.ReadOnly)
-    ObjectID = proxy_property(int, 'ObjectID', AccessMode.ReadOnly)
-    OwnerID = proxy_property(int, 'OwnerID', AccessMode.ReadOnly)
+    Application: AcadApplication = proxy_property('AcadApplication', 'Application', AccessMode.ReadOnly)
+    Document: AcadDocument = proxy_property('AcadDocument', 'Document', AccessMode.ReadOnly)
+    Handle: str = proxy_property(str, 'Handle', AccessMode.ReadOnly)
+    HasExtensionDictionary: bool = proxy_property(bool, 'HasExtensionDictionary', AccessMode.ReadOnly)
+    ObjectName: str = proxy_property(str, 'ObjectName', AccessMode.ReadOnly)
+    ObjectID: int = proxy_property(int, 'ObjectID', AccessMode.ReadOnly)
+    OwnerID: int = proxy_property(int, 'OwnerID', AccessMode.ReadOnly)
 
     def GetExtensionDictionary(self):
         from .Objects.AcadDictionary import AcadDictionary
@@ -43,7 +43,7 @@ class IAcadObjectCollection(IAcadObject):
     def __init__(self, obj) -> None:
         super().__init__(obj)
 
-    Count = proxy_property(int, 'Count', AccessMode.ReadOnly)
+    Count: int = proxy_property(int, 'Count', AccessMode.ReadOnly)
 
     def Item(self, Index: int | str):
         obj = self._obj.Item(Index)
