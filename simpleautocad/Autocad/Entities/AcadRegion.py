@@ -10,15 +10,15 @@ class AcadRegion(AcadEntity):
     def __init__(self, obj) -> None:
         super().__init__(obj)
 
-    Area = proxy_property(float, 'Area', AccessMode.ReadOnly)
-    Centroid = proxy_property('PyGePoint2d', 'Centroid', AccessMode.ReadOnly)
-    MomentOfInertia = proxy_property('PyGePoint3d', 'MomentOfInertia', AccessMode.ReadOnly)
-    Normal = proxy_property('PyGeVector3d', 'Normal', AccessMode.ReadWrite)
-    Perimeter = proxy_property(float, 'Perimeter', AccessMode.ReadOnly)
-    PrincipalDirections = proxy_property('PyGeVector3d', 'PrincipalDirections', AccessMode.ReadOnly)
-    PrincipalMoments = proxy_property('PyGeVector3d', 'PrincipalMoments', AccessMode.ReadOnly)
-    ProductOfInertia = proxy_property('PyGeVector3d', 'ProductOfInertia', AccessMode.ReadOnly)
-    RadiiOfGyration = proxy_property('PyGeVector3d', 'RadiiOfGyration', AccessMode.ReadOnly)
+    Area: float = proxy_property(float, 'Area', AccessMode.ReadOnly)
+    Centroid: PyGePoint2d = proxy_property('PyGePoint2d', 'Centroid', AccessMode.ReadOnly)
+    MomentOfInertia: PyGePoint3d = proxy_property('PyGePoint3d', 'MomentOfInertia', AccessMode.ReadOnly)
+    Normal: PyGeVector3d = proxy_property('PyGeVector3d', 'Normal', AccessMode.ReadWrite)
+    Perimeter: float = proxy_property(float, 'Perimeter', AccessMode.ReadOnly)
+    PrincipalDirections: PyGeVector3d = proxy_property('PyGeVector3d', 'PrincipalDirections', AccessMode.ReadOnly)
+    PrincipalMoments: PyGeVector3d = proxy_property('PyGeVector3d', 'PrincipalMoments', AccessMode.ReadOnly)
+    ProductOfInertia: PyGeVector3d = proxy_property('PyGeVector3d', 'ProductOfInertia', AccessMode.ReadOnly)
+    RadiiOfGyration: PyGeVector3d = proxy_property('PyGeVector3d', 'RadiiOfGyration', AccessMode.ReadOnly)
 
     def Boolean(self, Operation: AcBooleanType, Object) -> None:
         self._obj.Boolean(Operation.value, Object())
