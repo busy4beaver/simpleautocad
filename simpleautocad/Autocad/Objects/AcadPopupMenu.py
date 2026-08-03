@@ -1,8 +1,13 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from ..Base import AppObject
 from ..Proxy import proxy_property, AccessMode
 from .AcadPopupMenuItem import AcadPopupMenuItem
+
+if TYPE_CHECKING:
+    from .AcadApplication import AcadApplication
 
 
 class AcadPopupMenu(AppObject):

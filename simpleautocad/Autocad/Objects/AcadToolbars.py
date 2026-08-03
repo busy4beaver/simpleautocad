@@ -1,8 +1,13 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from ..Base import AppObject, AppObjectCollection
 from ..Proxy import proxy_property, AccessMode
 from .AcadToolbar import AcadToolbar
+
+if TYPE_CHECKING:
+    from .AcadApplication import AcadApplication
 
 
 class AcadToolbars(AppObjectCollection):
