@@ -6,7 +6,7 @@ from ..AcadObject import IAcadObjectCollection
 from .AcadPlotConfiguration import AcadPlotConfiguration
 
 
-class AcadPlotConfigurations(IAcadObjectCollection):
+class AcadPlotConfigurations(IAcadObjectCollection[AcadPlotConfiguration]):
     def __init__(self, obj) -> None:
         super().__init__(obj)
 
