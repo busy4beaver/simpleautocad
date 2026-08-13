@@ -38,6 +38,12 @@ class AcadUtility(AppObject):
         return self._obj.GetCorner(Point(), Prompt)
 
     def GetDistance(self, Point: PyGePoint3d = None, Prompt: str = None) -> float:
+        if Point is None and Prompt is None:
+            return self._obj.GetDistance()
+        if Point is None:
+            return self._obj.GetDistance(None, Prompt)
+        if Prompt is None:
+            return self._obj.GetDistance(Point())
         return self._obj.GetDistance(Point(), Prompt)
 
     def GetEntity(self, Prompt: str = '') -> tuple:
@@ -135,12 +141,12 @@ class AcadUtility(AppObject):
         Displacement: int,
         OCSNormal: PyGeVector3d = None,
     ) -> tuple:
-        if OCSNormal:
+        if OCSNormal is None:
             return self._obj.TranslateCoordinates(
-                Point(), FromCoordSystem, ToCoordSystem, Displacement, OCSNormal()
+                Point(), FromCoordSystem, ToCoordSystem, Displacement
             )
         return self._obj.TranslateCoordinates(
-            Point(), FromCoordSystem, ToCoordSystem, Displacement, OCSNormal
+            Point(), FromCoordSystem, ToCoordSystem, Displacement, OCSNormal()
         )
 
 
