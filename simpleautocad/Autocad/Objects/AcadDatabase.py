@@ -56,6 +56,10 @@ class AcadDatabase(AcadObject):
     Views: AcadViews = proxy_property('AcadViews', 'Views', AccessMode.ReadOnly)
 
     def CopyObjects(self, Objects: Variant, Owner: Variant = None, IdPairs: Variant = None) -> Variant:
+        if Owner is None and IdPairs is None:
+            return self._obj.CopyObjects(Objects)
+        if IdPairs is None:
+            return self._obj.CopyObjects(Objects, Owner)
         return self._obj.CopyObjects(Objects, Owner, IdPairs)
 
     def HandleToObject(self, Handle: str) -> AcadObject:
