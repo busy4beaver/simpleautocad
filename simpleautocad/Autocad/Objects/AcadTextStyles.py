@@ -9,6 +9,8 @@ class AcadTextStyles(IAcadObjectCollection):
         super().__init__(obj)
 
     def Add(self, Name: str = None) -> AcadTextStyle:
+        if Name is None:
+            return AcadTextStyle(self._obj.Add())
         return AcadTextStyle(self._obj.Add(Name))
 
     def Item(self, Index: int) -> AcadTextStyle:
