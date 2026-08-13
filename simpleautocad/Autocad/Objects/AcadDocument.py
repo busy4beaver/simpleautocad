@@ -106,7 +106,12 @@ class AcadDocument(AcadObject):
         self._obj.AuditInfo(FixErr)
 
     def Close(self, SaveChanges: bool = None, FileName: str = None) -> None:
-        self._obj.Close(SaveChanges, FileName)
+        if SaveChanges is None and FileName is None:
+            self._obj.Close()
+        elif FileName is None:
+            self._obj.Close(SaveChanges)
+        else:
+            self._obj.Close(SaveChanges if SaveChanges is not None else True, FileName)
 
     def EndUndoMark(self) -> None:
         self._obj.EndUndoMark()
@@ -134,6 +139,8 @@ class AcadDocument(AcadObject):
         return AcadObject(self._obj.ObjectIdToObject(ObjectID))
 
     def Open(self, FullName: str, ReadOnly: bool = False, Password: str = None) -> AcadDocument:
+        if Password is None:
+            return AcadDocument(self._obj.Open(FullName, ReadOnly))
         return AcadDocument(self._obj.Open(FullName, ReadOnly, Password))
 
     def PurgeAll(self) -> None:
@@ -146,7 +153,12 @@ class AcadDocument(AcadObject):
         self._obj.Save()
 
     def SaveAs(self, FullFileName: str, SaveAsType: Variant = None, SecurityParams: Variant = None) -> None:
-        self._obj.SaveAs(FullFileName, SaveAsType, SecurityParams)
+        if SaveAsType is None and SecurityParams is None:
+            self._obj.SaveAs(FullFileName)
+        elif SecurityParams is None:
+            self._obj.SaveAs(FullFileName, SaveAsType)
+        else:
+            self._obj.SaveAs(FullFileName, SaveAsType, SecurityParams)
 
     def SendCommand(self, Command: str) -> None:
         self._obj.SendCommand(Command)
