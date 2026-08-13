@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Iterator, Optional
 
 from ..Base import AppObject, AppObjectCollection
 from ..Proxy import proxy_property, AccessMode
@@ -18,7 +18,7 @@ class AcadDocuments(AppObjectCollection):
     Application: AcadApplication = proxy_property('AcadApplication', 'Application', AccessMode.ReadOnly)
     Count: int = proxy_property(int, 'Count', AccessMode.ReadOnly)
 
-    def Add(self, TemplateName: str = None) -> AcadDocument:
+    def Add(self, TemplateName: Optional[str] = None) -> AcadDocument:
         if TemplateName is None:
             return AcadDocument(self._obj.Add())
         return AcadDocument(self._obj.Add(TemplateName))
@@ -29,13 +29,20 @@ class AcadDocuments(AppObjectCollection):
     def Item(self, Index: int | str) -> AcadDocument:
         return AcadDocument(self._obj.Item(Index))
 
-    def Open(self, Name: str, ReadOnly: vBool = None, Password: vPassword = None) -> AcadDocument:
+    def Open(
+        self,
+        Name: str,
+        ReadOnly: Optional[vBool] = None,
+        Password: Optional[vPassword] = None,
+    ) -> AcadDocument:
         if ReadOnly is None and Password is None:
             return AcadDocument(self._obj.Open(Name))
         if Password is None:
             return AcadDocument(self._obj.Open(Name, ReadOnly))
-        return AcadDocument(self._obj.Open(Name, ReadOnly if ReadOnly is not None else False, Password))
+        return AcadDocument(
+            self._obj.Open(Name, ReadOnly if ReadOnly is not None else False, Password)
+        )
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[AcadDocument]:
         for item in self._obj:
             yield AcadDocument(item)
