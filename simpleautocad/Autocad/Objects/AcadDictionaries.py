@@ -9,4 +9,6 @@ class AcadDictionaries(IAcadObjectCollection):
         super().__init__(obj)
 
     def Add(self, Name: str = None) -> AcadDictionary:
+        if Name is None:
+            return AcadDictionary(self._obj.Add())
         return AcadDictionary(self._obj.Add(Name))
