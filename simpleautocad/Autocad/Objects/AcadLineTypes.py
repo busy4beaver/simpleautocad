@@ -1,10 +1,12 @@
 from __future__ import annotations
 
+from typing import Iterator
+
 from ..AcadObject import IAcadObjectCollection
 from .AcadLineType import AcadLineType
 
 
-class AcadLineTypes(IAcadObjectCollection):
+class AcadLineTypes(IAcadObjectCollection[AcadLineType]):
     def __init__(self, obj) -> None:
         super().__init__(obj)
 
@@ -17,6 +19,6 @@ class AcadLineTypes(IAcadObjectCollection):
     def Load(self, LineTypeName: str, FileName: str) -> None:
         self._obj.Load(LineTypeName, FileName)
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[AcadLineType]:
         for item in self._obj:
             yield AcadLineType(item)
