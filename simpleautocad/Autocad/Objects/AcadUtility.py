@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from enum import IntEnum
+from typing import Optional
 
 from ..Base import AppObject
 from ..AcadObject import AcadObject
@@ -29,7 +30,7 @@ class AcadUtility(AppObject):
     def DistanceToReal(self, Distance: str, Unit) -> float:
         return self._obj.DistanceToReal(Distance, Unit)
 
-    def GetAngle(self, Point: PyGePoint3d = None, Prompt: str = '') -> float:
+    def GetAngle(self, Point: Optional[PyGePoint3d] = None, Prompt: str = '') -> float:
         if Point is None:
             return self._obj.GetAngle()
         return self._obj.GetAngle(Point(), Prompt)
@@ -37,7 +38,11 @@ class AcadUtility(AppObject):
     def GetCorner(self, Point: PyGePoint3d, Prompt: str = '') -> tuple:
         return self._obj.GetCorner(Point(), Prompt)
 
-    def GetDistance(self, Point: PyGePoint3d = None, Prompt: str = None) -> float:
+    def GetDistance(
+        self,
+        Point: Optional[PyGePoint3d] = None,
+        Prompt: Optional[str] = None,
+    ) -> float:
         if Point is None and Prompt is None:
             return self._obj.GetDistance()
         if Point is None:
@@ -65,7 +70,7 @@ class AcadUtility(AppObject):
     def GetOrientation(self, Point: PyGePoint3d, Prompt: str = '') -> float:
         return self._obj.GetOrientation(Point(), Prompt)
 
-    def GetPoint(self, Point: PyGePoint3d = None, Prompt: str = '') -> PyGePoint3d:
+    def GetPoint(self, Point: Optional[PyGePoint3d] = None, Prompt: str = '') -> PyGePoint3d:
         if Point is None:
             return PyGePoint3d(self._obj.GetPoint())
         return PyGePoint3d(self._obj.GetPoint(Point, Prompt))
@@ -85,7 +90,7 @@ class AcadUtility(AppObject):
         Object, PickedPoint, TransMatrix, ContextData = self._obj.GetSubEntity()
         return Object, PickedPoint, TransMatrix, ContextData
 
-    def InitializeUserInput(self, Bits: int, Keyword: str = None) -> None:
+    def InitializeUserInput(self, Bits: int, Keyword: Optional[str] = None) -> None:
         if Keyword:
             self._obj.InitializeUserInput(Bits, Keyword)
         else:
@@ -139,7 +144,7 @@ class AcadUtility(AppObject):
         FromCoordSystem,
         ToCoordSystem,
         Displacement: int,
-        OCSNormal: PyGeVector3d = None,
+        OCSNormal: Optional[PyGeVector3d] = None,
     ) -> tuple:
         if OCSNormal is None:
             return self._obj.TranslateCoordinates(
