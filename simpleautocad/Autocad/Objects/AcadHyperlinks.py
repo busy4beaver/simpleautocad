@@ -16,8 +16,16 @@ class AcadHyperlinks(AppObject):
     Count: int = proxy_property(int, 'Count', AccessMode.ReadOnly)
 
     def Add(self, Name: str, Description: str = None, NamedLocation: str = None) -> AcadHyperlink:
+        """Add a hyperlink. Optional COM args must be omitted, not passed as None."""
         from .AcadHyperlink import AcadHyperlink
-        return AcadHyperlink(self._obj.Add(Name, Description, NamedLocation))
+        if Description is None and NamedLocation is None:
+            result = self._obj.Add(Name)
+        elif NamedLocation is None:
+            result = self._obj.Add(Name, Description)
+        else:
+            # Description is positional before NamedLocation — empty string if omitted
+            result = self._obj.Add(Name, Description if Description is not None else '', NamedLocation)
+        return AcadHyperlink(result)
 
     def Item(self, Index) -> AcadHyperlink:
         from .AcadHyperlink import AcadHyperlink
