@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from ..Proxy import proxy_property, AccessMode
 from ..AcadObject import IAcadObjectCollection, AcadObject
+from ..Proxy import proxy_property, AccessMode
 from ...Types.Ge import (
     PyGePoint3d,
     PyGeVector3d,
@@ -285,7 +285,7 @@ class AcadBlock(IAcadObjectCollection):
     def Detach(self) -> None:
         self._obj.Detach()
 
-    def InsertBlock(self, InsertionPoint: PyGePoint3d, Name: str, Xscale: float, Yscale: float, Zscale: float, Rotation: float) -> AcadBlockReference:
+    def InsertBlock(self, InsertionPoint: PyGePoint3d, Name: str, Xscale: float = 1.0, Yscale: float = 1.0, Zscale: float = 1.0, Rotation: float = 0.0) -> AcadBlockReference:
         from ..Entities.AcadBlockReference import AcadBlockReference
         return AcadBlockReference(self._obj.InsertBlock(InsertionPoint(), Name, Xscale, Yscale, Zscale, Rotation))
 
