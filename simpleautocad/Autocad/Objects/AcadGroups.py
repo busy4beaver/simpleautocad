@@ -1,10 +1,12 @@
 from __future__ import annotations
 
+from typing import Iterator
+
 from ..AcadObject import IAcadObjectCollection
 from .AcadGroup import AcadGroup
 
 
-class AcadGroups(IAcadObjectCollection):
+class AcadGroups(IAcadObjectCollection[AcadGroup]):
     def __init__(self, obj) -> None:
         super().__init__(obj)
 
@@ -14,6 +16,6 @@ class AcadGroups(IAcadObjectCollection):
     def Item(self, Index: int | str) -> AcadGroup:
         return AcadGroup(self._obj.Item(Index))
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[AcadGroup]:
         for item in self._obj:
             yield AcadGroup(item)
