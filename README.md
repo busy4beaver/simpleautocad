@@ -1,4 +1,4 @@
-![SimpleAutoCAD](assets/preview.jpg)
+![SimpleAutoCAD](simpleautocad/assets/preview.jpg)
 
 # SimpleAutoCAD
 
