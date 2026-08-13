@@ -19,6 +19,8 @@ class AcadDocuments(AppObjectCollection):
     Count: int = proxy_property(int, 'Count', AccessMode.ReadOnly)
 
     def Add(self, TemplateName: str = None) -> AcadDocument:
+        if TemplateName is None:
+            return AcadDocument(self._obj.Add())
         return AcadDocument(self._obj.Add(TemplateName))
 
     def Close(self) -> None:
@@ -28,7 +30,11 @@ class AcadDocuments(AppObjectCollection):
         return AcadDocument(self._obj.Item(Index))
 
     def Open(self, Name: str, ReadOnly: vBool = None, Password: vPassword = None) -> AcadDocument:
-        return AcadDocument(self._obj.Open(Name, ReadOnly, Password))
+        if ReadOnly is None and Password is None:
+            return AcadDocument(self._obj.Open(Name))
+        if Password is None:
+            return AcadDocument(self._obj.Open(Name, ReadOnly))
+        return AcadDocument(self._obj.Open(Name, ReadOnly if ReadOnly is not None else False, Password))
 
     def __iter__(self):
         for item in self._obj:
