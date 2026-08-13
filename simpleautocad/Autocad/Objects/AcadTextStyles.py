@@ -6,7 +6,7 @@ from ..AcadObject import IAcadObjectCollection
 from .AcadTextStyle import AcadTextStyle
 
 
-class AcadTextStyles(IAcadObjectCollection):
+class AcadTextStyles(IAcadObjectCollection[AcadTextStyle]):
     def __init__(self, obj) -> None:
         super().__init__(obj)
 
