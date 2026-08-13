@@ -1,15 +1,20 @@
+![SimpleAutoCAD](assets/preview.jpg)
+
 # SimpleAutoCAD
 
 **SimpleAutoCAD** — это мощная Python-библиотека для автоматизации и программного управления Autodesk AutoCAD через COM-интерфейс.  
 Она предоставляет интуитивно понятный объектно-ориентированный интерфейс к объектной модели AutoCAD, позволяя создавать, редактировать и управлять 2D‑ и 3D‑чертежами непосредственно из Python-скриптов.
 
-[![Tag](https://img.shields.io/github/v/tag/busy4beaver/simpleautocad?color=00c2e8)](https://pypi.org/project/simpleautocad/)
+[![Tag](https://img.shields.io/github/v/tag/busy4beaver/simpleautocad?color=00c2e8)](https://pypi.org/project/simpleautocad/](https://github.com/busy4beaver/simpleautocad/tags))
 [![Supported Python versions](https://img.shields.io/badge/python-3.8%2B-blue?logo=python&logoColor=FFE873)](https://www.python.org/downloads/)
+[![Downloads](https://static.pepy.tech/badge/simpleautocad)](https://pepy.tech/project/simpleautocad)
 [![Licence](https://img.shields.io/github/license/busy4beaver/simpleautocad.svg)](LICENSE) 
 
 ---
 
 ## Содержание
+- [SimpleAutoCAD](#simpleautocad)
+  - [Содержание](#содержание)
   - [Особенности](#особенности)
   - [Установка](#установка)
   - [Быстрый старт](#быстрый-старт)
