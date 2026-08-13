@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Iterator, Optional
 
 from ..Base import AppObject, AppObjectCollection
 from ..Proxy import proxy_property, AccessMode
@@ -19,7 +19,7 @@ class AcadMenuGroups(AppObjectCollection):
     Count: int = proxy_property(int, 'Count', AccessMode.ReadOnly)
     Parent: AppObject = proxy_property('AppObject', 'Parent', AccessMode.ReadWrite)
 
-    def Load(self, MenuFileName: str, BaseMenu: vBool = None) -> AcadMenuGroup:
+    def Load(self, MenuFileName: str, BaseMenu: Optional[vBool] = None) -> AcadMenuGroup:
         if BaseMenu is None:
             return AcadMenuGroup(self._obj.Load(MenuFileName))
         return AcadMenuGroup(self._obj.Load(MenuFileName, BaseMenu()))
@@ -27,6 +27,6 @@ class AcadMenuGroups(AppObjectCollection):
     def Item(self, Index: int | str) -> AcadMenuGroup:
         return AcadMenuGroup(self._obj.Item(Index))
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[AcadMenuGroup]:
         for item in self._obj:
             yield AcadMenuGroup(item)
