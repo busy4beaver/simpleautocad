@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 from ..Proxy import proxy_property, AccessMode
 from ..AcadObject import AcadObject
@@ -55,7 +55,12 @@ class AcadDatabase(AcadObject):
     Viewports: AcadViewports = proxy_property('AcadViewports', 'Viewports', AccessMode.ReadOnly)
     Views: AcadViews = proxy_property('AcadViews', 'Views', AccessMode.ReadOnly)
 
-    def CopyObjects(self, Objects: Variant, Owner: Variant = None, IdPairs: Variant = None) -> Variant:
+    def CopyObjects(
+        self,
+        Objects: Variant,
+        Owner: Optional[Variant] = None,
+        IdPairs: Optional[Variant] = None,
+    ) -> Variant:
         if Owner is None and IdPairs is None:
             return self._obj.CopyObjects(Objects)
         if IdPairs is None:
