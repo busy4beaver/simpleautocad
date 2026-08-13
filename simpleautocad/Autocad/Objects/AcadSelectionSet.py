@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 from ..Proxy import proxy_property, AccessMode
 from ..AcadObject import AcadObject
@@ -37,6 +37,7 @@ class AcadSelectionSet(AcadObject):
 
     def Item(self, Index: Variant) -> AcadEntity:
         from ..AcadEntity import AcadEntity
+
         return AcadEntity(self._obj.Item(Index))
 
     def RemoveItems(self, Objects: vObjectArray) -> None:
@@ -45,14 +46,13 @@ class AcadSelectionSet(AcadObject):
     def Select(
         self,
         Mode: AcSelect,
-        Point1: Variant = None,
-        Point2: Variant = None,
-        FilterType: Variant = None,
-        FilterData: Variant = None,
+        Point1: Optional[Variant] = None,
+        Point2: Optional[Variant] = None,
+        FilterType: Optional[Variant] = None,
+        FilterData: Optional[Variant] = None,
     ) -> None:
         args = [Mode]
         # Trailing optional COM args must be omitted, not passed as None.
-        # Once a later arg is set, earlier ones must be provided (use None only if caller set a later one).
         if Point1 is not None or Point2 is not None or FilterType is not None or FilterData is not None:
             args.append(Point1)
         if Point2 is not None or FilterType is not None or FilterData is not None:
@@ -66,8 +66,8 @@ class AcadSelectionSet(AcadObject):
     def SelectAtPoint(
         self,
         Point: Variant,
-        FilterType: Variant = None,
-        FilterData: Variant = None,
+        FilterType: Optional[Variant] = None,
+        FilterData: Optional[Variant] = None,
     ) -> None:
         if FilterType is None and FilterData is None:
             self._obj.SelectAtPoint(Point)
@@ -80,8 +80,8 @@ class AcadSelectionSet(AcadObject):
         self,
         Mode: AcSelect,
         PointsList: Variant,
-        FilterType: Variant = None,
-        FilterData: Variant = None,
+        FilterType: Optional[Variant] = None,
+        FilterData: Optional[Variant] = None,
     ) -> None:
         if FilterType is None and FilterData is None:
             self._obj.SelectByPolygon(Mode, PointsList)
@@ -90,7 +90,11 @@ class AcadSelectionSet(AcadObject):
         else:
             self._obj.SelectByPolygon(Mode, PointsList, FilterType, FilterData)
 
-    def SelectOnScreen(self, FilterType: Variant = None, FilterData: Variant = None) -> None:
+    def SelectOnScreen(
+        self,
+        FilterType: Optional[Variant] = None,
+        FilterData: Optional[Variant] = None,
+    ) -> None:
         if FilterType is None and FilterData is None:
             self._obj.SelectOnScreen()
         elif FilterData is None:
