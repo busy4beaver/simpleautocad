@@ -6,7 +6,7 @@ from ..AcadObject import IAcadObjectCollection
 from .AcadDictionary import AcadDictionary
 
 
-class AcadDictionaries(IAcadObjectCollection):
+class AcadDictionaries(IAcadObjectCollection[AcadDictionary]):
     def __init__(self, obj) -> None:
         super().__init__(obj)
 
