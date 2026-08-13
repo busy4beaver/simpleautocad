@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 from ..Proxy import proxy_property, AccessMode
 from ..AcadObject import AcadObject
@@ -105,7 +105,11 @@ class AcadDocument(AcadObject):
     def AuditInfo(self, FixErr: bool) -> None:
         self._obj.AuditInfo(FixErr)
 
-    def Close(self, SaveChanges: bool = None, FileName: str = None) -> None:
+    def Close(
+        self,
+        SaveChanges: Optional[bool] = None,
+        FileName: Optional[str] = None,
+    ) -> None:
         if SaveChanges is None and FileName is None:
             self._obj.Close()
         elif FileName is None:
@@ -127,6 +131,7 @@ class AcadDocument(AcadObject):
 
     def Import(self, FileName: str, InsertionPoint: Variant, ScaleFactor: float) -> AcadEntity:
         from ..AcadEntity import AcadEntity
+
         return AcadEntity(self._obj.Import(FileName, InsertionPoint, ScaleFactor))
 
     def LoadShapeFile(self, FullName: str) -> None:
@@ -138,7 +143,12 @@ class AcadDocument(AcadObject):
     def ObjectIdToObject(self, ObjectID: int) -> AcadObject:
         return AcadObject(self._obj.ObjectIdToObject(ObjectID))
 
-    def Open(self, FullName: str, ReadOnly: bool = False, Password: str = None) -> AcadDocument:
+    def Open(
+        self,
+        FullName: str,
+        ReadOnly: bool = False,
+        Password: Optional[str] = None,
+    ) -> AcadDocument:
         if Password is None:
             return AcadDocument(self._obj.Open(FullName, ReadOnly))
         return AcadDocument(self._obj.Open(FullName, ReadOnly, Password))
@@ -152,7 +162,12 @@ class AcadDocument(AcadObject):
     def Save(self) -> None:
         self._obj.Save()
 
-    def SaveAs(self, FullFileName: str, SaveAsType: Variant = None, SecurityParams: Variant = None) -> None:
+    def SaveAs(
+        self,
+        FullFileName: str,
+        SaveAsType: Optional[Variant] = None,
+        SecurityParams: Optional[Variant] = None,
+    ) -> None:
         if SaveAsType is None and SecurityParams is None:
             self._obj.SaveAs(FullFileName)
         elif SecurityParams is None:
