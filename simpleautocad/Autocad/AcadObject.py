@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Iterator, Union
 
 from .Base import AppObject
 from .Proxy import proxy_property, AccessMode
@@ -9,6 +9,7 @@ from ..Types.VarType import vShortArray, vVariantArray
 if TYPE_CHECKING:
     from .Objects.AcadApplication import AcadApplication
     from .Objects.AcadDocument import AcadDocument
+    from .Objects.AcadDictionary import AcadDictionary
 
 
 class IAcadObject(AppObject):
@@ -25,8 +26,9 @@ class IAcadObject(AppObject):
     ObjectID: int = proxy_property(int, 'ObjectID', AccessMode.ReadOnly)
     OwnerID: int = proxy_property(int, 'OwnerID', AccessMode.ReadOnly)
 
-    def GetExtensionDictionary(self):
+    def GetExtensionDictionary(self) -> AcadDictionary:
         from .Objects.AcadDictionary import AcadDictionary
+
         return AcadDictionary(self._obj.GetExtensionDictionary())
 
     def GetXData(self, AppName: str = '') -> tuple:
@@ -51,10 +53,16 @@ class IAcadObjectCollection(IAcadObject):
 
     Count: int = proxy_property(int, 'Count', AccessMode.ReadOnly)
 
-    def Item(self, Index: int | str):
+    def Item(self, Index: Union[int, str]) -> AcadObject:
         obj = self._obj.Item(Index)
         return AcadObject(obj)
 
-    def __iter__(self):
+    def __getitem__(self, Index: Union[int, str]) -> AcadObject:
+        return self.Item(Index)
+
+    def __iter__(self) -> Iterator[AcadObject]:
         for item in self._obj:
             yield AcadObject(item)
+
+    def __len__(self) -> int:
+        return int(self.Count)
