@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Iterator, Union
+from typing import TYPE_CHECKING, Generic, Iterator, TypeVar, Union, cast
 
 from .Base import AppObject
 from .Proxy import proxy_property, AccessMode
@@ -10,6 +10,8 @@ if TYPE_CHECKING:
     from .Objects.AcadApplication import AcadApplication
     from .Objects.AcadDocument import AcadDocument
     from .Objects.AcadDictionary import AcadDictionary
+
+T = TypeVar('T', bound='AcadObject')
 
 
 class IAcadObject(AppObject):
@@ -47,22 +49,24 @@ class AcadObject(IAcadObject):
         self._obj.Delete()
 
 
-class IAcadObjectCollection(IAcadObject):
+class IAcadObjectCollection(IAcadObject, Generic[T]):
+    """Typed AutoCAD collection. Subclasses: IAcadObjectCollection[AcadLayer], …"""
+
     def __init__(self, obj) -> None:
         super().__init__(obj)
 
     Count: int = proxy_property(int, 'Count', AccessMode.ReadOnly)
 
-    def Item(self, Index: Union[int, str]) -> AcadObject:
-        obj = self._obj.Item(Index)
-        return AcadObject(obj)
+    def Item(self, Index: Union[int, str]) -> T:
+        # Subclasses override to wrap in the concrete type; base is a fallback.
+        return cast(T, AcadObject(self._obj.Item(Index)))
 
-    def __getitem__(self, Index: Union[int, str]) -> AcadObject:
+    def __getitem__(self, Index: Union[int, str]) -> T:
         return self.Item(Index)
 
-    def __iter__(self) -> Iterator[AcadObject]:
+    def __iter__(self) -> Iterator[T]:
         for item in self._obj:
-            yield AcadObject(item)
+            yield cast(T, AcadObject(item))
 
     def __len__(self) -> int:
         return int(self.Count)
