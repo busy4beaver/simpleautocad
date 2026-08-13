@@ -50,7 +50,18 @@ class AcadSelectionSet(AcadObject):
         FilterType: Variant = None,
         FilterData: Variant = None,
     ) -> None:
-        self._obj.Select(Mode, Point1, Point2, FilterType, FilterData)
+        args = [Mode]
+        # Trailing optional COM args must be omitted, not passed as None.
+        # Once a later arg is set, earlier ones must be provided (use None only if caller set a later one).
+        if Point1 is not None or Point2 is not None or FilterType is not None or FilterData is not None:
+            args.append(Point1)
+        if Point2 is not None or FilterType is not None or FilterData is not None:
+            args.append(Point2)
+        if FilterType is not None or FilterData is not None:
+            args.append(FilterType)
+        if FilterData is not None:
+            args.append(FilterData)
+        self._obj.Select(*args)
 
     def SelectAtPoint(
         self,
@@ -58,7 +69,12 @@ class AcadSelectionSet(AcadObject):
         FilterType: Variant = None,
         FilterData: Variant = None,
     ) -> None:
-        self._obj.SelectAtPoint(Point, FilterType, FilterData)
+        if FilterType is None and FilterData is None:
+            self._obj.SelectAtPoint(Point)
+        elif FilterData is None:
+            self._obj.SelectAtPoint(Point, FilterType)
+        else:
+            self._obj.SelectAtPoint(Point, FilterType, FilterData)
 
     def SelectByPolygon(
         self,
@@ -67,10 +83,20 @@ class AcadSelectionSet(AcadObject):
         FilterType: Variant = None,
         FilterData: Variant = None,
     ) -> None:
-        self._obj.SelectByPolygon(Mode, PointsList, FilterType, FilterData)
+        if FilterType is None and FilterData is None:
+            self._obj.SelectByPolygon(Mode, PointsList)
+        elif FilterData is None:
+            self._obj.SelectByPolygon(Mode, PointsList, FilterType)
+        else:
+            self._obj.SelectByPolygon(Mode, PointsList, FilterType, FilterData)
 
     def SelectOnScreen(self, FilterType: Variant = None, FilterData: Variant = None) -> None:
-        self._obj.SelectOnScreen(FilterType, FilterData)
+        if FilterType is None and FilterData is None:
+            self._obj.SelectOnScreen()
+        elif FilterData is None:
+            self._obj.SelectOnScreen(FilterType)
+        else:
+            self._obj.SelectOnScreen(FilterType, FilterData)
 
     def Update(self) -> None:
         self._obj.Update()
